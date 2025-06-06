@@ -42,7 +42,7 @@ def register():
         password = request.form['password']
 
         cursor = db.get_db().cursor()
-        # Cek apakah username sudah digunakan
+        # Cek apakah username sudah digunakan atau belum
         cursor.execute("SELECT * FROM user WHERE username = %s", (username,))
         if cursor.fetchone():
             flash("Username sudah terdaftar!", "danger")
