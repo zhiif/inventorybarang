@@ -1,0 +1,337 @@
+{% extends 'user/layout.html' %} {% block isi %}
+<style>
+  /* Variabel untuk Warna dan Transparansi - Konsisten dengan Login/Register */
+  :root {
+    --card-base-color: 255, 255, 255; /* Untuk background RGBA card */
+    --card-alpha: 0.1; /* Transparansi card (10%) */
+    --card-border-color: rgba(255, 255, 255, 0.2); /* Border card transparan */
+    --card-shadow-color: rgba(0, 0, 0, 0.4); /* Shadow card */
+    --input-bg-alpha: 0.05; /* Transparansi input field */
+    --input-border-color: rgba(255, 255, 255, 0.1);
+    --text-light: #f8f9fa; /* Teks putih */
+    --text-muted: #adb5bd; /* Teks abu-abu untuk placeholder */
+    --accent-color: #7b2cff; /* Ungu cerah untuk aksen */
+    --btn-primary-bg: #6900ff; /* Warna tombol utama */
+    --btn-primary-hover-bg: #8a2be2; /* Warna tombol hover */
+    --icon-color: #a879ff; /* Warna untuk ikon informasi kontak */
+  }
+
+  body {
+    /* Menggunakan background gambar yang sama dari halaman login/register */
+    background: url("https://i.pinimg.com/736x/65/65/48/6565488b7b3db6985c6981f6898ec42f.jpg")
+      no-repeat center center fixed;
+    background-size: cover; /* Pastikan gambar mencakup seluruh area */
+    color: var(--text-light); /* Teks default putih */
+    min-height: 100vh; /* Memastikan body mengisi seluruh tinggi viewport */
+    margin: 0;
+    overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
+  }
+
+  /* Styling khusus untuk halaman kontak */
+  .contact-header {
+    /* Untuk header, kita bisa tetap menggunakan gradient gelap agar teks tetap terbaca,
+       atau jika ingin full glassmorphism, hapus gradient dan sesuaikan opacity */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      /* Sedikit lebih transparan dari sebelumnya */
+        url("https://source.unsplash.com/random/1200x400/?contact-us,office")
+        no-repeat center center/cover;
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    margin-bottom: 40px;
+    /* Tambahkan efek glassmorphism pada header */
+    backdrop-filter: blur(10px); /* Blur sedikit agar latar belakang terlihat */
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border-color); /* Border di bagian bawah */
+  }
+
+  .contact-header h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Sedikit glow */
+  }
+
+  .contact-header p {
+    font-size: 1.25rem;
+    color: var(--text-light);
+  }
+
+  .contact-info .icon-box {
+    text-align: center;
+    padding: 30px;
+    /* Efek Glassmorphism */
+    background-color: rgba(
+      var(--card-base-color),
+      var(--card-alpha)
+    ) !important;
+    border: 1px solid var(--card-border-color) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important;
+    backdrop-filter: blur(15px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light); /* Teks di dalam box jadi putih */
+  }
+
+  .contact-info .icon-box:hover {
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important;
+    transform: translateY(-2px);
+  }
+
+  .contact-info .icon-box i {
+    font-size: 3rem;
+    color: var(--icon-color); /* Warna ikon yang menarik perhatian */
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(168, 121, 255, 0.5);
+  }
+
+  .contact-info .icon-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--text-light); /* Judul di dalam box jadi putih */
+  }
+
+  .contact-info .icon-box p {
+    color: var(--text-light); /* Paragraph di dalam box jadi putih */
+  }
+
+  /* Ubah dari .contact-form menjadi .hubungi-kami */
+  .hubungi-kami {
+    padding: 40px;
+    /* Efek Glassmorphism */
+    background-color: rgba(
+      var(--card-base-color),
+      var(--card-alpha)
+    ) !important;
+    border: 1px solid var(--card-border-color) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important;
+    backdrop-filter: blur(15px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+    transition: all 0.3s ease;
+    color: var(--text-light); /* Teks di dalam form jadi putih */
+  }
+
+  .hubungi-kami:hover {
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important;
+    transform: translateY(-2px);
+  }
+
+  .hubungi-kami h2 {
+    color: var(--text-light); /* Judul form jadi putih */
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Gaya konsisten untuk form elements */
+  .form-label {
+    color: var(--text-light); /* Warna teks label */
+    font-weight: 500;
+  }
+
+  .form-control {
+    background-color: rgba(
+      var(--card-base-color),
+      var(--input-bg-alpha)
+    ) !important; /* Background input transparan */
+    border: 1px solid var(--input-border-color) !important; /* Border input transparan */
+    color: var(--text-light) !important; /* Warna teks input */
+    padding: 0.8rem 1rem !important; /* Ukuran padding input */
+    border-radius: 8px !important; /* Sudut input */
+    font-size: 1rem;
+  }
+
+  .form-control:focus {
+    background-color: rgba(
+      var(--card-base-color),
+      var(--input-bg-alpha) + 0.05
+    ) !important; /* Sedikit lebih gelap saat focus */
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(123, 44, 255, 0.3) !important; /* Glow pada focus */
+  }
+
+  .form-control::placeholder {
+    color: var(--text-muted) !important; /* Warna placeholder */
+  }
+
+  .btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+    color: var(--text-light) !important;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem !important;
+    border-radius: 8px !important;
+    transition: background-color 0.3s ease, transform 0.2s ease,
+      box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--btn-primary-hover-bg) !important;
+    border-color: var(--btn-primary-hover-bg) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .map-container {
+    overflow: hidden;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+    height: 0;
+    border-radius: 15px; /* Sesuaikan dengan border-radius card */
+    box-shadow: 0 8px 32px 0 var(--card-shadow-color); /* Sesuaikan shadow */
+    margin-top: 40px; /* Tambahkan margin atas */
+  }
+
+  .map-container iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    border: 0;
+    border-radius: 15px; /* Sesuaikan dengan border-radius card */
+  }
+
+  /* Styling untuk alert, jika digunakan */
+  .alert {
+    border-radius: 8px;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparan */
+    color: var(--text-light); /* Warna teks alert */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .alert-success {
+    background-color: rgba(60, 179, 113, 0.2) !important; /* Hijau transparan */
+    color: #90ee90 !important;
+    border-color: #90ee90 !important;
+  }
+  .alert-danger {
+    background-color: rgba(255, 69, 0, 0.2) !important; /* Oranye transparan */
+    color: #ffb6c1 !important;
+    border-color: #ffb6c1 !important;
+  }
+</style>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+
+<section class="contact-header">
+  <div class="container">
+    <h1>Hubungi Kami</h1>
+    <p class="lead">
+      Kami siap membantu Anda. Jangan ragu untuk bertanya atau memberikan
+      masukan.
+    </p>
+  </div>
+</section>
+
+<section class="container my-5">
+  <div class="row gy-4 contact-info">
+    <div class="col-md-4">
+      <div class="icon-box">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Alamat Kami</h3>
+        <p>
+          Jl. Contoh Alamat No.123, <br />Kota Contoh, Provinsi Contoh, 12345
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="icon-box">
+        <i class="fas fa-envelope"></i>
+        <h3>Email Kami</h3>
+        <p>info@contoh.com<br />support@contoh.com</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="icon-box">
+        <i class="fas fa-phone-alt"></i>
+        <h3>Telepon Kami</h3>
+        <p>+62 123 4567 890<br />+62 987 6543 210</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="hubungi-kami">
+        <h2 class="mb-4 text-center">Kirim Pesan kepada Kami</h2>
+        <form action="/submit_contact_form" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nama Lengkap</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Anda</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="subject" class="form-label">Subjek</label>
+            <input
+              type="text"
+              class="form-control"
+              id="subject"
+              name="subject"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Pesan Anda</label>
+            <textarea
+              class="form-control"
+              id="message"
+              name="message"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Kirim Pesan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container my-5">
+  <h2 class="mb-4 text-center">Lokasi Kami</h2>
+  <div class="map-container">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.6074900010996!2d106.84022837499066!3d-6.17937409380845!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d1964293f9%3A0xe543e3f4e24c2d3a!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1717614002622!5m2!1sid!2sid"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+</section>
+
+{% endblock %}

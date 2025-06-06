@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Halaman Register</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Variabel untuk Warna dan Transparansi */
+      :root {
+        --card-base-color: 255, 255, 255; /* Untuk background RGBA card */
+        --card-alpha: 0.1; /* Transparansi card (10%) */
+        --card-border-color: rgba(
+          255,
+          255,
+          255,
+          0.2
+        ); /* Border card transparan */
+        --card-shadow-color: rgba(0, 0, 0, 0.4); /* Shadow card */
+        --input-bg-alpha: 0.05; /* Transparansi input field */
+        --input-border-color: rgba(255, 255, 255, 0.1);
+        --text-light: #f8f9fa; /* Teks putih */
+        --text-muted: #adb5bd; /* Teks abu-abu untuk placeholder */
+        --accent-color: #7b2cff; /* Ungu cerah untuk aksen */
+        --btn-primary-bg: #6900ff; /* Warna tombol utama */
+        --btn-primary-hover-bg: #8a2be2; /* Warna tombol hover */
+      }
+
+      body {
+        /* Menggunakan background gambar yang sama dari halaman login */
+        background: url("https://i.pinimg.com/736x/65/65/48/6565488b7b3db6985c6981f6898ec42f.jpg")
+          no-repeat center center fixed;
+        background-size: cover; /* Pastikan gambar mencakup seluruh area */
+
+        color: var(--text-light); /* Teks default putih */
+        display: flex; /* Untuk memposisikan card di tengah vertikal */
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden; /* Tambahkan ini agar gambar background tidak scroll */
+      }
+
+      .register-container {
+        width: 100%;
+        max-width: 400px; /* Batasi lebar container untuk tampilan lebih baik */
+        padding: 15px; /* Padding di sisi untuk mobile */
+      }
+
+      .card {
+        background-color: rgba(
+          var(--card-base-color),
+          var(--card-alpha)
+        ) !important; /* Background transparan */
+        border: 1px solid var(--card-border-color) !important; /* Border transparan */
+        border-radius: 15px !important; /* Sudut membulat */
+        box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important; /* Bayangan kuat */
+        transition: all 0.3s ease;
+        padding: 2.5rem !important; /* Padding internal card */
+      }
+
+      .card:hover {
+        box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important; /* Shadow hover lebih kuat */
+        transform: translateY(-2px); /* Sedikit naik saat hover */
+      }
+
+      h3 {
+        color: var(--text-light); /* Warna teks judul */
+        font-weight: 700;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Sedikit glow pada judul */
+      }
+
+      .form-label {
+        color: var(--text-light); /* Warna teks label */
+        font-weight: 500;
+      }
+
+      .form-control {
+        background-color: rgba(
+          var(--card-base-color),
+          var(--input-bg-alpha)
+        ) !important; /* Background input transparan */
+        border: 1px solid var(--input-border-color) !important; /* Border input transparan */
+        color: var(--text-light) !important; /* Warna teks input */
+        padding: 0.8rem 1rem !important; /* Ukuran padding input */
+        border-radius: 8px !important; /* Sudut input */
+        font-size: 1rem;
+      }
+
+      .form-control:focus {
+        background-color: rgba(
+          var(--card-base-color),
+          var(--input-bg-alpha) + 0.05
+        ) !important; /* Sedikit lebih gelap saat focus */
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 0 0 0.25rem rgba(123, 44, 255, 0.3) !important; /* Glow pada focus */
+      }
+
+      .form-control::placeholder {
+        color: var(--text-muted) !important; /* Warna placeholder */
+      }
+
+      .input-group-text {
+        background-color: rgba(
+          var(--card-base-color),
+          var(--input-bg-alpha) + 0.03
+        ) !important; /* Background ikon transparan */
+        border: 1px solid var(--input-border-color) !important;
+        border-left: none !important;
+        color: var(--text-light) !important; /* Warna ikon */
+        border-radius: 0 8px 8px 0 !important;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background-color: var(--btn-primary-bg) !important;
+        border-color: var(--btn-primary-bg) !important;
+        color: var(--text-light) !important;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem !important;
+        border-radius: 8px !important;
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--btn-primary-hover-bg) !important;
+        border-color: var(--btn-primary-hover-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Gaya untuk link di bawah form (Sudah punya akun? Masuk di sini) */
+      .text-center a {
+        color: var(--accent-color) !important; /* Default link putih */
+        text-decoration: none; /* Hapus underline default */
+        transition: color 0.3s ease; /* Transisi warna untuk hover */
+      }
+
+      .text-center a:hover {
+        color: var(--accent-color) !important; /* Warna ungu saat hover */
+        text-decoration: underline; /* Tambahkan underline saat hover (opsional) */
+      }
+
+      /* Gaya untuk teks "Sudah punya akun?" agar tetap putih */
+      .text-center span {
+        color: var(--text-light);
+      }
+
+      .alert {
+        border-radius: 8px;
+        font-size: 0.9rem;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        background-color: rgba(255, 255, 255, 0.1); /* Transparan */
+        color: var(--text-light); /* Warna teks alert */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .alert-success {
+        background-color: rgba(
+          60,
+          179,
+          113,
+          0.2
+        ) !important; /* Hijau transparan */
+        color: #90ee90 !important;
+        border-color: #90ee90 !important;
+      }
+      .alert-danger {
+        background-color: rgba(
+          255,
+          69,
+          0,
+          0.2
+        ) !important; /* Oranye transparan */
+        color: #ffb6c1 !important;
+        border-color: #ffb6c1 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container register-container">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card p-4">
+            <h3 class="text-center mb-4">Register User</h3>
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %} {% endif %} {% endwith %}
+            <form action="/register" method="POST">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  placeholder="Masukkan username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Kata Sandi</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan kata sandi"
+                    required
+                  />
+                  <span class="input-group-text" id="togglePassword">
+                    <i class="bi bi-eye" id="iconToggle"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="confirm_password" class="form-label"
+                  >Konfirmasi Kata Sandi</label
+                >
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Ulangi kata sandi"
+                    required
+                  />
+                  <span class="input-group-text" id="toggleConfirmPassword">
+                    <i class="bi bi-eye" id="iconToggleConfirm"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Daftar</button>
+              </div>
+              <div class="text-center">
+                <span>Sudah punya akun? </span>
+                <a href="/login">Masuk di sini</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Toggle password utama
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const icon = document.getElementById("iconToggle");
+          const type = passwordInput.type === "password" ? "text" : "password";
+          passwordInput.type = type;
+
+          icon.classList.toggle("bi-eye");
+          icon.classList.toggle("bi-eye-slash");
+        });
+
+      // Toggle konfirmasi password
+      document
+        .getElementById("toggleConfirmPassword")
+        .addEventListener("click", function () {
+          const confirmPasswordInput =
+            document.getElementById("confirm_password");
+          const iconConfirm = document.getElementById("iconToggleConfirm");
+          const type =
+            confirmPasswordInput.type === "password" ? "text" : "password";
+          confirmPasswordInput.type = type;
+
+          iconConfirm.classList.toggle("bi-eye");
+          iconConfirm.classList.toggle("bi-eye-slash");
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Dashboard Admin{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Variabel Global untuk Konsistensi Desain */
+      :root {
+        --header-height: 0rem; /* Header tidak ada, set ke 0 */
+        --nav-width: 250px;
+        --nav-width-collapsed: 60px; /* Lebar sidebar saat tertutup (hanya ikon) */
+        --body-font: "Nunito", sans-serif;
+        --normal-font-size: 1rem;
+        --z-fixed: 100;
+
+        /* --- Variabel untuk Efek Transparan (Glassmorphism) pada Sidebar --- */
+        --sidebar-bg-rgb: 255, 255, 255; /* RGB dasar untuk transparansi (putih) */
+        --sidebar-bg-alpha: 0.15; /* Tingkat transparansi (0.0 - 1.0) */
+        --sidebar-border-color: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Warna border transparan */
+        --sidebar-shadow-color: rgba(
+          106,
+          0,
+          255,
+          0.3
+        ); /* Warna bayangan ungu (dari pedoman user) */
+        --sidebar-text-color: #f8f9fa; /* Warna teks putih keabu-abuan (dari pedoman user) */
+        --sidebar-link-hover-bg: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* Background hover lebih terang (dari pedoman user) */
+        --sidebar-link-hover-color: #a879ff; /* Warna teks hover ungu terang (dari pedoman user) */
+        --sidebar-active-bg: #8a2be2; /* Warna background link aktif (biru keunguan dari pedoman user) */
+
+        /* Warna untuk teks 'Admin Panel' */
+        --admin-panel-text-color: #ffffff; /* Putih bersih */
+        --admin-panel-font-size: 1.25rem;
+        --admin-panel-font-weight: 700;
+
+        /* Variabel untuk tombol toggle global di mobile */
+        --mobile-toggle-bg: rgba(
+          106,
+          0,
+          255,
+          0.7
+        ); /* Background ungu transparan */
+        --mobile-toggle-color: #f8f9fa; /* Warna ikon putih */
+        --mobile-toggle-shadow: 0 2px 10px rgba(106, 0, 255, 0.5); /* Shadow ungu */
+      }
+
+      /* Body umum */
+      body {
+        margin: 0;
+        font-family: var(--body-font);
+        font-size: var(--normal-font-size);
+        /* Background gradasi yang sama dengan halaman user untuk konsistensi */
+        background: linear-gradient(
+          to right,
+          #6a00f2,
+          #7b00e0,
+          #8a2be2
+        ); /* Gradasi ungu-biru */
+        overflow-x: hidden;
+        color: #333; /* Warna teks default untuk konten utama */
+      }
+
+      /* Semua elemen dengan transisi */
+      * {
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+
+      /* Hapus header karena tidak digunakan */
+      .header {
+        display: none;
+      }
+
+      /* Sidebar (L-navbar) */
+      .l-navbar {
+        position: fixed;
+        top: 0;
+        left: -250px; /* Default: tertutup di mobile */
+        width: var(--nav-width);
+        height: 100vh;
+        /* Menggunakan variabel untuk transparansi dengan efek glassmorphism */
+        background-color: rgba(var(--sidebar-bg-rgb), var(--sidebar-bg-alpha));
+        backdrop-filter: blur(10px) saturate(150%); /* Efek blur kaca dari pedoman user */
+        -webkit-backdrop-filter: blur(10px) saturate(150%);
+        border-right: 1px solid var(--sidebar-border-color); /* Border transparan */
+        padding-top: 1rem; /* Sesuaikan padding atas karena tidak ada header */
+        z-index: var(--z-fixed);
+        box-shadow: 2px 0 10px var(--sidebar-shadow-color); /* Bayangan dengan warna ungu */
+        transition: left 0.3s ease, width 0.3s ease, background-color 0.4s ease,
+          border-color 0.4s ease, box-shadow 0.4s ease,
+          backdrop-filter 0.4s ease; /* Transisi untuk hover */
+      }
+
+      /* Animasi hover untuk sidebar */
+      .l-navbar:hover {
+        background-color: var(
+          --sidebar-link-hover-bg
+        ); /* Menggunakan variabel hover bg */
+        border-color: rgba(
+          255,
+          255,
+          255,
+          0.3
+        ); /* Border lebih terlihat saat hover */
+        box-shadow: 2px 0 15px rgba(106, 0, 255, 0.5); /* Shadow lebih kuat saat hover */
+        backdrop-filter: blur(15px) saturate(180%); /* Blur lebih kuat saat hover */
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+      }
+
+      /* Kelas untuk sidebar saat terbuka (baik di mobile maupun desktop) */
+      .l-navbar.show {
+        left: 0;
+      }
+
+      /* Kelas untuk sidebar saat tertutup (di desktop, menyisakan ikon) */
+      .l-navbar.collapsed {
+        width: var(--nav-width-collapsed);
+        padding-left: 0.1rem; /* Sesuaikan padding agar ikon di tengah */
+        padding-right: 0.5rem;
+      }
+
+      .nav {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      /* Logo/Nama Admin Panel di dalam sidebar (sekarang sebagai nav_logo) */
+      .nav_logo {
+        display: flex; /* Penting untuk flexbox internal */
+        align-items: center;
+        font-weight: var(--admin-panel-font-weight);
+        font-size: var(--admin-panel-font-size);
+        color: var(--admin-panel-text-color);
+        padding: 1rem; /* Sama dengan nav_link */
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--sidebar-border-color);
+        margin-bottom: 1rem;
+        cursor: pointer; /* Menandakan ini interaktif */
+        text-decoration: none; /* Hapus underline default link */
+      }
+
+      .nav_logo .admin-panel-text {
+        white-space: nowrap;
+        overflow: hidden;
+        margin-right: 1rem; /* Jarak antara teks dan ikon toggle */
+        transition: opacity 0.3s ease, width 0.3s ease, margin-right 0.3s ease;
+      }
+
+      .nav_logo .bx-menu {
+        font-size: 1.5rem; /* Ukuran ikon toggle */
+        transition: margin-right 0.3s ease;
+      }
+
+      /* State collapsed untuk nav_logo (desktop) */
+      .l-navbar.collapsed .nav_logo .admin-panel-text {
+        opacity: 0;
+        width: 0;
+        margin-right: 0; /* Hilangkan margin saat teks tersembunyi */
+      }
+
+      .l-navbar.collapsed .nav_logo .bx-menu {
+        margin-left: auto; /* Pusatkan ikon di mode collapsed */
+        margin-right: auto;
+      }
+
+      .nav_link {
+        display: flex;
+        align-items: center;
+        color: var(--sidebar-text-color); /* Warna teks untuk link */
+        padding: 1rem;
+        text-decoration: none;
+        overflow: hidden; /* Sembunyikan teks saat sidebar collapsed */
+        transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transisi untuk hover */
+      }
+
+      .nav_link:hover {
+        background-color: var(
+          --sidebar-link-hover-bg
+        ); /* Background hover transparan */
+        color: var(--sidebar-link-hover-color); /* Warna teks hover */
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glow putih saat hover */
+      }
+
+      .nav_logo-icon, /* Ini mungkin tidak lagi dipakai jika ikon di nav_logo terpisah */
+      .nav_icon {
+        margin-right: 1rem;
+        font-size: 1.25rem;
+      }
+
+      .l-navbar.collapsed .nav_icon {
+        margin-right: 0; /* Hapus margin agar ikon lebih ke tengah */
+      }
+
+      .nav_name {
+        white-space: nowrap; /* Cegah teks pindah baris */
+      }
+
+      .l-navbar.collapsed .nav_name {
+        display: none; /* Sembunyikan nama link saat sidebar collapsed */
+      }
+
+      /* Link aktif styling */
+      .nav_list a.active {
+        background-color: var(
+          --sidebar-active-bg
+        ); /* Background link aktif (ungu) */
+        border-radius: 0.5rem; /* Sedikit lengkungan pada link aktif */
+        font-weight: 600; /* Tebal untuk link aktif */
+        color: var(
+          --sidebar-link-hover-color
+        ); /* Warna ungu terang untuk teks aktif */
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.3); /* Glow halus untuk teks aktif */
+      }
+
+      /* NEW: Tombol toggle global yang selalu terlihat di mobile */
+      .mobile-top-toggle {
+        position: fixed;
+        top: 1rem; /* Dari atas */
+        left: 1rem; /* Dari kiri */
+        background-color: var(--mobile-toggle-bg);
+        color: var(--mobile-toggle-color);
+        padding: 0.6rem;
+        border-radius: 50%; /* Bentuk lingkaran */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: var(--z-fixed) + 1; /* Pastikan di atas sidebar */
+        box-shadow: var(--mobile-toggle-shadow);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .mobile-top-toggle i {
+        font-size: 1.5rem;
+      }
+      .mobile-top-toggle:hover {
+        background-color: rgba(
+          106,
+          0,
+          255,
+          0.9
+        ); /* Sedikit lebih gelap saat hover */
+        box-shadow: 0 4px 20px rgba(106, 0, 255, 0.7);
+      }
+
+      /* Main Wrapper */
+      .main-wrapper {
+        margin-top: 0; /* Tidak ada header, jadi margin-top 0 */
+        margin-left: 0; /* Default ke 0 */
+        transition: margin-left 0.3s ease;
+        min-height: 100vh; /* Sesuaikan tinggi agar mengisi seluruh viewport */
+        padding-top: 1.5rem; /* Padding konten */
+      }
+
+      /* Pergeseran main-wrapper saat sidebar terbuka */
+      .main-wrapper.shifted {
+        margin-left: var(--nav-width); /* Geser sejauh lebar sidebar penuh */
+      }
+
+      .main-wrapper.shifted-collapsed {
+        margin-left: var(
+          --nav-width-collapsed
+        ); /* Geser sejauh lebar sidebar collapsed */
+      }
+
+      /* Overlay */
+      .overlay {
+        position: fixed;
+        top: 0; /* Mulai dari paling atas karena tidak ada header */
+        left: 0;
+        width: 100%;
+        height: 100%; /* Isi seluruh viewport */
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 50;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Konten utama */
+      .main-content {
+        padding: 1.5rem;
+        color: #333; /* Warna teks yang kontras dengan background body */
+        background-color: var(
+          --white-color
+        ); /* Background putih untuk konten agar mudah dibaca */
+        margin: 1.5rem; /* Margin di sekitar konten */
+        border-radius: 0.75rem; /* Sudut membulat */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan ringan */
+      }
+
+      /* Responsifitas */
+      @media (min-width: 768px) {
+        /* Desktop */
+        body {
+          margin-left: var(
+            --nav-width
+          ); /* Default saat load untuk desktop (sidebar terbuka) */
+        }
+
+        .l-navbar {
+          left: 0; /* Sidebar selalu di layar di desktop */
+          padding: 1rem;
+        }
+
+        .l-navbar.collapsed {
+          left: 0; /* Pastikan tetap di 0 saat collapsed */
+        }
+
+        .main-wrapper {
+          margin-left: var(--nav-width); /* Default saat load untuk desktop */
+        }
+
+        /* Sembunyikan mobile-top-toggle di desktop */
+        .mobile-top-toggle {
+          display: none;
+        }
+
+        /* Tampilkan Admin Panel text dan icon toggle di desktop */
+        .nav_logo {
+          justify-content: space-between; /* Untuk ikon toggle di kanan */
+          cursor: pointer;
+        }
+        .nav_logo .admin-panel-text {
+          display: inline-block; /* Pastikan teks terlihat */
+          opacity: 1;
+          width: auto;
+        }
+        .nav_logo .bx-menu {
+          display: block; /* Pastikan ikon terlihat */
+          margin-left: 0; /* Default */
+          margin-right: 0;
+        }
+
+        /* Khusus saat desktop collapsed */
+        .l-navbar.collapsed .nav_logo {
+          justify-content: center; /* Pusatkan ikon toggle */
+        }
+      }
+
+      @media (max-width: 767px) {
+        /* Mobile */
+        body {
+          margin-left: 0; /* Tidak ada margin-left di mobile */
+        }
+        .l-navbar {
+          left: -250px; /* Default tertutup di mobile */
+          padding-top: 1rem; /* Tetap padding atas */
+        }
+        .l-navbar.show {
+          left: 0; /* Terbuka di mobile */
+          width: var(--nav-width);
+        }
+        .main-wrapper {
+          margin-left: 0; /* Di mobile, konten tidak bergeser */
+        }
+        .main-wrapper.shifted,
+        .main-wrapper.shifted-collapsed {
+          margin-left: 0; /* Jangan geser di mobile */
+        }
+
+        /* Tampilkan mobile-top-toggle di mobile */
+        .mobile-top-toggle {
+          display: flex;
+        }
+
+        /* Sembunyikan Admin Panel text dan icon toggle di dalam sidebar di mobile */
+        .nav_logo {
+          display: none; /* Sembunyikan seluruh nav_logo di mobile */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-top-toggle" id="mobile-toggle-btn">
+      <i class="bx bx-menu"></i>
+    </div>
+
+    <div class="l-navbar" id="nav-bar">
+      <div class="nav">
+        <div>
+          <a href="#" class="nav_logo" id="desktop-toggle-btn">
+            <span class="admin-panel-text">Admin Panel</span>
+            <i class="bx bx-menu"></i>
+          </a>
+
+          <div class="nav_list">
+            <a
+              href="/admin/home"
+              class="nav_link {% if request.path == '/admin/home' %}active{% endif %}"
+            >
+              <i class="bx bx-grid-alt nav_icon"></i>
+              <span class="nav_name">Dashboard</span>
+            </a>
+            <a
+              href="/admin/admin-kelola-barang"
+              class="nav_link {% if request.path == '/admin/admin-kelola-barang' %}active{% endif %}"
+            >
+              <i class="bx bx-box nav_icon"></i>
+              <span class="nav_name">Kelola Barang</span>
+            </a>
+            <a
+              href="/admin/admin-kelola-user"
+              class="nav_link {% if request.path == '/admin/admin-kelola-user' %}active{% endif %}"
+            >
+              <i class="bx bx-user nav_icon"></i>
+              <span class="nav_name">Kelola User</span>
+            </a>
+          </div>
+        </div>
+        <a href="/logout" class="nav_link">
+          <i class="bx bx-log-out nav_icon"></i>
+          <span class="nav_name">SignOut</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="overlay" id="body-overlay"></div>
+
+    <div class="main-wrapper" id="main-wrapper">
+      <div class="main-content container">
+        {% block content %}
+        <h2 style="color: #333">Selamat Datang di Dashboard Admin!</h2>
+        <p style="color: #555">Ini adalah area utama Anda.</p>
+        {% endblock %}
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileToggle = document.getElementById("mobile-toggle-btn");
+        const desktopToggle = document.getElementById("desktop-toggle-btn");
+
+        const nav = document.getElementById("nav-bar");
+        const wrapper = document.getElementById("main-wrapper");
+        const overlay = document.getElementById("body-overlay");
+
+        // Status awal sidebar desktop (asumsi terbuka)
+        // Ini harus selalu true saat di desktop, dan toggle akan mengubahnya.
+        let isSidebarOpenDesktop = true;
+
+        function updateUI() {
+          if (window.innerWidth >= 768) {
+            // Logika Desktop
+            nav.classList.remove("show"); // Pastikan kelas show dari mobile tidak aktif
+            overlay.classList.remove("active"); // Pastikan overlay tidak aktif
+
+            if (isSidebarOpenDesktop) {
+              nav.classList.remove("collapsed");
+              wrapper.classList.remove("shifted-collapsed");
+              wrapper.classList.add("shifted");
+            } else {
+              // Collapsed state for desktop
+              nav.classList.add("collapsed");
+              wrapper.classList.remove("shifted");
+              wrapper.classList.add("shifted-collapsed");
+            }
+          } else {
+            // Logika Mobile
+            nav.classList.remove("collapsed"); // Hapus kelas desktop-specific
+            wrapper.classList.remove("shifted", "shifted-collapsed"); // Pastikan wrapper tidak bergeser
+
+            if (nav.classList.contains("show")) {
+              overlay.classList.add("active");
+            } else {
+              overlay.classList.remove("active");
+            }
+          }
+        }
+
+        // Event listener untuk tombol toggle mobile (di luar sidebar)
+        if (mobileToggle) {
+          mobileToggle.addEventListener("click", () => {
+            if (window.innerWidth < 768) {
+              nav.classList.toggle("show");
+              updateUI();
+            }
+          });
+        }
+
+        // Event listener untuk tombol toggle desktop (nav_logo di dalam sidebar)
+        if (desktopToggle) {
+          desktopToggle.addEventListener("click", (e) => {
+            e.preventDefault(); // Mencegah navigasi jika nav_logo adalah tautan
+            if (window.innerWidth >= 768) {
+              isSidebarOpenDesktop = !isSidebarOpenDesktop;
+              updateUI();
+            }
+          });
+        }
+
+        // Event listener untuk overlay (hanya berfungsi di mobile)
+        overlay.addEventListener("click", () => {
+          if (window.innerWidth < 768) {
+            nav.classList.remove("show");
+            updateUI();
+          }
+        });
+
+        // Inisialisasi saat halaman dimuat
+        updateUI();
+
+        // Handle resize
+        window.addEventListener("resize", () => {
+          // Ketika berpindah dari mobile ke desktop, pastikan sidebar desktop kembali ke mode terbuka
+          if (window.innerWidth >= 768) {
+            // Jika sebelumnya di mobile dan sidebar terbuka, atau jika desktop collapsed
+            // kita asumsikan ingin kembali ke expanded.
+            if (nav.classList.contains("show") || !isSidebarOpenDesktop) {
+              isSidebarOpenDesktop = true; // Setel ke expanded
+            }
+            nav.classList.remove("show"); // Pastikan kelas mobile 'show' dihapus
+          } else {
+            // Ketika berpindah dari desktop ke mobile, pastikan sidebar mobile default tertutup
+            nav.classList.remove("show");
+          }
+          updateUI();
+        });
+      });
+    </script>
+  </body>
+</html>

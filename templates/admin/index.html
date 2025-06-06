@@ -1,0 +1,248 @@
+{% extends "admin/layout.html" %} {% block title %}Dashboard - Admin Panel{%
+endblock %} {% block content %}
+<style>
+  /* Variabel untuk Warna dan Transparansi - Konsisten dengan Login/Register & Contact */
+  :root {
+    --card-base-color: 255, 255, 255; /* Untuk background RGBA card */
+    --card-alpha: 0.1; /* Transparansi card (10%) */
+    --card-border-color: rgba(255, 255, 255, 0.2); /* Border card transparan */
+    --card-shadow-color: rgba(0, 0, 0, 0.4); /* Shadow card */
+    --input-bg-alpha: 0.05; /* Transparansi input field (jika ada input di dashboard) */
+    --input-border-color: rgba(
+      255,
+      255,
+      255,
+      0.1
+    ); /* (jika ada input di dashboard) */
+    --text-light: #f8f9fa; /* Teks putih */
+    --text-muted: #adb5bd; /* Teks abu-abu untuk placeholder/sekunder */
+    --accent-color: #7b2cff; /* Ungu cerah untuk aksen (misal: judul card, progres bar) */
+    --btn-primary-bg: #6900ff; /* Warna tombol utama (jika ada tombol) */
+    --btn-primary-hover-bg: #8a2be2; /* Warna tombol hover */
+    --icon-color: #a879ff; /* Warna untuk ikon (jika ada) */
+
+    /* Tambahan variabel untuk konsistensi dashboard */
+    --dashboard-bg: #1a0a30; /* Background dashboard, sedikit lebih gelap dari ungu aksen */
+    --card-header-bg: rgba(
+      var(--card-base-color),
+      0.07
+    ); /* Header card lebih gelap dari body card */
+    --progress-bar-bg: var(--accent-color); /* Warna progress bar */
+  }
+
+  body {
+    /* Menggunakan background gambar yang sama dari halaman login/register/kontak */
+    background: url("https://i.pinimg.com/736x/65/65/48/6565488b7b3db6985c6981f6898ec42f.jpg")
+      no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-light); /* Teks default putih */
+    min-height: 100vh; /* Memastikan body mengisi seluruh tinggi viewport */
+    margin: 0;
+    overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
+    /* Untuk sentuhan gelap khas dashboard, bisa tambahkan overlay */
+    position: relative; /* Untuk pseudo-element overlay */
+  }
+
+  /* Jika ingin ada overlay gelap di atas background gambar, aktifkan ini */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay gelap transparan */
+    z-index: -1; /* Pastikan di bawah konten */
+  }
+
+  .container-fluid {
+    padding-top: 30px; /* Sesuaikan padding agar tidak terlalu dekat dengan navbar */
+    padding-bottom: 30px;
+  }
+
+  .h1,
+  h1 {
+    color: var(--text-light) !important; /* Warna judul utama halaman */
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Sedikit glow */
+  }
+
+  .card {
+    /* Efek Glassmorphism */
+    background-color: rgba(
+      var(--card-base-color),
+      var(--card-alpha)
+    ) !important;
+    border: 1px solid var(--card-border-color) !important;
+    border-radius: 15px !important; /* Sudut lebih membulat, konsisten dengan halaman kontak */
+    box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important;
+    backdrop-filter: blur(15px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+    transition: all 0.3s ease;
+    height: 100%; /* Memastikan semua card memiliki tinggi yang sama di baris yang sama */
+    color: var(--text-light) !important; /* Warna teks default untuk card */
+  }
+
+  .card:hover {
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important;
+    transform: translateY(-5px); /* Sedikit naik saat hover */
+    border-color: var(
+      --accent-color
+    ) !important; /* Border menjadi aksen saat hover */
+  }
+
+  .card-header {
+    background-color: var(
+      --card-header-bg
+    ) !important; /* Background header card lebih gelap */
+    border-bottom: 1px solid var(--card-border-color) !important; /* Border konsisten */
+    font-weight: 600;
+    color: var(--text-light) !important; /* Warna header */
+    padding: 1rem 1.25rem; /* Padding standar Bootstrap */
+    border-top-left-radius: 15px !important; /* Sesuaikan radius */
+    border-top-right-radius: 15px !important; /* Sesuaikan radius */
+  }
+
+  .card-title {
+    font-size: 2.5rem; /* Ukuran judul lebih besar */
+    font-weight: 700;
+    color: var(
+      --accent-color
+    ) !important; /* Warna angka penyorotan dengan aksen ungu */
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(123, 44, 255, 0.5); /* Glow untuk angka */
+  }
+
+  .card-text {
+    color: var(--text-muted) !important; /* Teks deskripsi abu-abu lembut */
+  }
+
+  /* Override spesifik untuk warna Bootstrap yang sudah ada di card (jika digunakan) */
+  .card.bg-primary,
+  .card.bg-success {
+    /* Kita tidak akan override langsung bg-primary/bg-success di sini karena kita ingin semua card punya glassmorphism yang sama.
+       Jika ingin variasi, bisa buat kelas kustom seperti .card-success-variant */
+    background-color: rgba(
+      var(--card-base-color),
+      var(--card-alpha)
+    ) !important; /* Tetap glassmorphism */
+    border: 1px solid var(--card-border-color) !important;
+    color: var(--text-light) !important;
+  }
+
+  /* Gaya untuk progress bar */
+  .progress {
+    background-color: rgba(
+      var(--card-base-color),
+      0.05
+    ) !important; /* Background progress bar lebih transparan */
+    border-radius: 8px;
+    height: 25px; /* Tinggi progress bar */
+    border: 1px solid var(--card-border-color); /* Border progress bar */
+  }
+
+  .progress-bar {
+    background-color: var(
+      --progress-bar-bg
+    ) !important; /* Warna progress bar dari variabel aksen */
+    border-radius: 8px; /* Sesuaikan border radius */
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Gaya untuk list group dalam card */
+  .list-group {
+    border-radius: 10px; /* Sudut membulat untuk list group */
+    border: 1px solid var(--card-border-color); /* Border untuk list group */
+  }
+
+  .list-group-item {
+    background-color: rgba(
+      var(--card-base-color),
+      0.05
+    ) !important; /* Background item list lebih transparan */
+    color: var(--text-light) !important;
+    border-color: var(--card-border-color) !important;
+  }
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .list-group-item strong {
+    color: var(--text-highlight); /* Warna teks penyorotan di list item */
+  }
+</style>
+
+<div class="container-fluid py-4">
+  <h1 class="mb-4 text-center">Admin Dashboard Overview</h1>
+  <div class="row g-4">
+    {# g-4 untuk memberikan gap antar kolom #}
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header">Jumlah Barang</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ total_barang }}</h5>
+          <p class="card-text">
+            Total barang yang terdaftar di database sistem.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header">Jumlah User</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ total_users }}</h5>
+          <p class="card-text">Total pengguna yang terdaftar di sistem.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header">Total Penjualan</div>
+        <div class="card-body">
+          <h5 class="card-title">12</h5>
+          {# Menggunakan nilai statis sesuai contoh Anda #}
+          <p class="card-text">
+            Total transaksi penjualan yang telah tercatat.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">Statistik Lainnya</div>
+        <div class="card-body">
+          <p class="card-text">
+            Di sini Anda bisa menambahkan grafik, tabel, atau informasi penting
+            lainnya.
+          </p>
+          <div class="progress mb-3">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: 75%"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              Progres Penjualan Bulan Ini 75%
+            </div>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              Barang Terlaris: <strong>Smartwatch Pro</strong>
+            </li>
+            <li class="list-group-item">
+              User Baru Minggu Ini: <strong>5</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halaman User</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* Variabel untuk Warna Navbar (hanya untuk teks dan shadow, bukan background) */
+      :root {
+        --navbar-border-color: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Border sangat tipis dan transparan */
+        --navbar-shadow-color: rgba(
+          106,
+          0,
+          255,
+          0.3
+        ); /* Shadow untuk kedalaman */
+        --navbar-text-color: #f8f9fa; /* Teks putih */
+        --navbar-link-hover-color: #a879ff; /* Ungu terang untuk hover/active */
+        --navbar-brand-color: #f8f9fa; /* Warna brand putih */
+
+        /* Variabel tambahan untuk efek hover navbar */
+        --navbar-hover-bg-color: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* Background samar saat hover */
+        --navbar-hover-border-color: rgba(
+          255,
+          255,
+          255,
+          0.3
+        ); /* Border lebih terlihat saat hover */
+        --navbar-hover-shadow-color: rgba(
+          106,
+          0,
+          255,
+          0.5
+        ); /* Shadow lebih kuat saat hover */
+
+        /* Variabel untuk underline bergerak */
+        --moving-underline-color: #8a2be2; /* Ungu untuk underline bergerak */
+        --moving-underline-height: 3px; /* Tinggi underline */
+      }
+
+      /* Custom CSS for a more elegant look */
+      body {
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #f8f9fa; /* Light grey background for subtlety */
+      }
+
+      /* Gaya Navbar Sepenuhnya Transparan */
+      .navbar {
+        background-color: transparent !important; /* SEPENUHNYA TRANSPARAN */
+        backdrop-filter: blur(10px) saturate(150%) !important; /* Efek blur kaca */
+        -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+        border-bottom: 1px solid var(--navbar-border-color) !important;
+        box-shadow: 0 2px 8px var(--navbar-shadow-color) !important;
+        transition: background-color 0.4s ease, border-color 0.4s ease,
+          box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+        position: relative; /* Penting untuk positioning underline */
+        z-index: 1000; /* Pastikan navbar di atas konten */
+      }
+
+      /* Animasi hover untuk navbar */
+      .navbar:hover {
+        background-color: var(--navbar-hover-bg-color) !important;
+        border-color: var(--navbar-hover-border-color) !important;
+        box-shadow: 0 4px 15px var(--navbar-hover-shadow-color) !important;
+        backdrop-filter: blur(15px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+      }
+
+      .navbar-brand {
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--navbar-brand-color) !important;
+      }
+
+      .nav-link {
+        transition: color 0.3s ease-in-out;
+        font-weight: 500;
+        color: var(--navbar-text-color) !important;
+        padding-bottom: 8px; /* Memberikan ruang untuk underline */
+      }
+
+      .nav-link:hover {
+        color: var(--navbar-link-hover-color) !important;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glow putih saat hover */
+      }
+
+      /* Gaya untuk underline aktif */
+      .nav-link.active {
+        font-weight: 600;
+        color: var(--navbar-link-hover-color) !important;
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+      }
+
+      /* CSS untuk underline yang bergerak */
+      #moving-underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: var(--moving-underline-height);
+        background-color: var(--moving-underline-color);
+        border-radius: 2px;
+        transition: width 0.3s ease-out, transform 0.3s ease-out; /* Animasi pergerakan */
+        z-index: 1; /* Pastikan di bawah teks link jika teks punya background */
+      }
+
+      /* Mengatasi ikon toggler (untuk mobile) */
+      .navbar .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28248, 249, 250, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+      }
+
+      .navbar .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNavbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Kelola Barang</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              {# LOGIKA BACKEND UNTUK MENENTUKAN KELAS 'ACTIVE' #}
+              <a
+                class="nav-link {% if request.path == '/' %}active{% endif %}"
+                href="/"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              {# LOGIKA BACKEND UNTUK MENENTUKAN KELAS 'ACTIVE' #}
+              <a
+                class="nav-link {% if request.path == '/tentang' %}active{% endif %}"
+                href="/tentang"
+                >Tentang</a
+              >
+            </li>
+            <li class="nav-item">
+              {# LOGIKA BACKEND UNTUK MENENTUKAN KELAS 'ACTIVE' #}
+              <a
+                class="nav-link {% if request.path == '/kontak' %}active{% endif %}"
+                href="/kontak"
+                >Kontak</a
+              >
+            </li>
+            <li class="nav-item">
+              {# LOGIKA BACKEND UNTUK MENENTUKAN KELAS 'ACTIVE' #}
+              <a
+                class="nav-link {% if request.path == '/login' %}active{% endif %}"
+                href="/login"
+                >Login</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="moving-underline"></div>
+    </nav>
+
+    {%block isi %} {%endblock%}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const underline = document.getElementById("moving-underline");
+        const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+        const mainNavbar = document.getElementById("mainNavbar");
+
+        function updateUnderline(activeLink) {
+          if (activeLink) {
+            const linkRect = activeLink.getBoundingClientRect();
+            const navbarRect = mainNavbar.getBoundingClientRect();
+
+            const leftOffset = linkRect.left - navbarRect.left;
+
+            underline.style.width = linkRect.width + "px";
+            underline.style.transform = `translateX(${leftOffset}px)`;
+            underline.style.opacity = "1";
+          } else {
+            underline.style.opacity = "0";
+          }
+        }
+
+        // Inisialisasi underline saat halaman dimuat
+        let currentActiveLink = document.querySelector(
+          ".navbar-nav .nav-link.active"
+        );
+        if (currentActiveLink) {
+          updateUnderline(currentActiveLink);
+        } else {
+          underline.style.opacity = "0"; // Sembunyikan jika tidak ada link aktif saat awal
+        }
+
+        // Tambahkan event listener untuk setiap link
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            // Karena klik link biasanya memuat ulang halaman, logika ini mungkin tidak selalu terlihat
+            // jika navigasi halaman terlalu cepat.
+            // Namun, ini penting untuk memastikan underline bergerak sebelum navigasi jika ada efek lain.
+            // Misalnya, jika Anda menggunakan SPA (Single Page Application) tanpa reload penuh.
+
+            // Hapus kelas 'active' dari semua link (ini hanya visual di browser sebelum reload)
+            navLinks.forEach((item) => item.classList.remove("active"));
+            // Tambahkan kelas 'active' ke link yang diklik (ini juga visual sebelum reload)
+            this.classList.add("active");
+            // Update posisi underline (ini akan langsung menggerakkan underline)
+            updateUnderline(this);
+
+            // Biarkan browser melakukan navigasi default (memuat halaman baru)
+            // event.preventDefault(); // JANGAN aktifkan ini jika Anda ingin navigasi normal antar halaman
+          });
+        });
+
+        // Optional: Perbarui posisi underline saat jendela diubah ukurannya
+        window.addEventListener("resize", function () {
+          const activeLinkOnResize = document.querySelector(
+            ".navbar-nav .nav-link.active"
+          );
+          updateUnderline(activeLinkOnResize);
+        });
+      });
+    </script>
+  </body>
+</html>
