@@ -204,7 +204,7 @@ endblock %} {% block content %}
       <div class="card mb-3">
         <div class="card-header">Total Penjualan</div>
         <div class="card-body">
-          <h5 class="card-title">12</h5>
+          <h5 class="card-title">{{ total_co }}</h5>
           {# Menggunakan nilai statis sesuai contoh Anda #}
           <p class="card-text">
             Total transaksi penjualan yang telah tercatat.
@@ -212,37 +212,7 @@ endblock %} {% block content %}
         </div>
       </div>
     </div>
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">Statistik Lainnya</div>
-        <div class="card-body">
-          <p class="card-text">
-            Di sini Anda bisa menambahkan grafik, tabel, atau informasi penting
-            lainnya.
-          </p>
-          <div class="progress mb-3">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 75%"
-              aria-valuenow="75"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              Progres Penjualan Bulan Ini 75%
-            </div>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              Barang Terlaris: <strong>Smartwatch Pro</strong>
-            </li>
-            <li class="list-group-item">
-              User Baru Minggu Ini: <strong>5</strong>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+
+    {% endblock %}
   </div>
 </div>
-{% endblock %}

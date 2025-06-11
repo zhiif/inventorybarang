@@ -65,6 +65,50 @@
         ); /* Background ungu transparan */
         --mobile-toggle-color: #f8f9fa; /* Warna ikon putih */
         --mobile-toggle-shadow: 0 2px 10px rgba(106, 0, 255, 0.5); /* Shadow ungu */
+
+        /* --- Variabel untuk Scrollbar Custom --- */
+        --scrollbar-thumb-color: #8a2be2; /* Ungu gelap */
+        --scrollbar-track-color: rgba(
+          0,
+          0,
+          0,
+          0.1
+        ); /* Track lebih transparan */
+        --scrollbar-thumb-hover-color: #a879ff; /* Ungu terang saat hover */
+        --scrollbar-width: 8px; /* Lebar scrollbar */
+        --scrollbar-border-radius: 5px; /* Border radius scrollbar */
+      }
+
+      /* Styling Scrollbar (untuk WebKit browsers seperti Chrome, Safari, Edge) */
+      /* Global scrollbar for the entire page */
+      ::-webkit-scrollbar {
+        width: var(--scrollbar-width);
+        height: var(--scrollbar-width); /* Untuk scrollbar horizontal */
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-color);
+        border-radius: var(--scrollbar-border-radius);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: var(--scrollbar-border-radius);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover-color);
+      }
+
+      /* Styling Scrollbar untuk Firefox */
+      /* Target elemen yang mungkin memiliki scrollbar, contoh: body, main-wrapper, main-content */
+      body,
+      .main-wrapper,
+      .main-content,
+      .table-responsive-wrapper {
+        scrollbar-width: thin; /* 'auto' atau 'thin' */
+        scrollbar-color: var(--scrollbar-thumb-color)
+          var(--scrollbar-track-color); /* thumb track */
       }
 
       /* Body umum */
@@ -79,7 +123,7 @@
           #7b00e0,
           #8a2be2
         ); /* Gradasi ungu-biru */
-        overflow-x: hidden;
+        overflow-x: hidden; /* Sembunyikan scrollbar horizontal secara default (desktop) */
         color: #333; /* Warna teks default untuk konten utama */
       }
 
@@ -274,6 +318,7 @@
         transition: margin-left 0.3s ease;
         min-height: 100vh; /* Sesuaikan tinggi agar mengisi seluruh viewport */
         padding-top: 1.5rem; /* Padding konten */
+        max-width: 100%; /* Pastikan tidak melebihi lebar */
       }
 
       /* Pergeseran main-wrapper saat sidebar terbuka */
@@ -297,8 +342,8 @@
         background-color: rgba(0, 0, 0, 0.4);
         z-index: 50;
         opacity: 0;
-        visibility: hidden;
         transition: 0.3s ease;
+        visibility: hidden; /* Tambahkan visibility agar tidak interaktif saat tidak aktif */
       }
 
       .overlay.active {
@@ -312,10 +357,12 @@
         color: #333; /* Warna teks yang kontras dengan background body */
         background-color: var(
           --white-color
-        ); /* Background putih untuk konten agar mudah dibaca */
+        ); /* Kembali ke putih sesuai yang Anda inginkan sebelumnya */
         margin: 1.5rem; /* Margin di sekitar konten */
         border-radius: 0.75rem; /* Sudut membulat */
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan ringan */
+        /* Sembunyikan overflow horizontal secara default untuk desktop */
+        overflow-x: hidden;
       }
 
       /* Responsifitas */
@@ -325,6 +372,7 @@
           margin-left: var(
             --nav-width
           ); /* Default saat load untuk desktop (sidebar terbuka) */
+          overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal di desktop */
         }
 
         .l-navbar {
@@ -338,11 +386,16 @@
 
         .main-wrapper {
           margin-left: var(--nav-width); /* Default saat load untuk desktop */
+          overflow-x: hidden; /* Tidak ada scrollbar horizontal di desktop */
+        }
+
+        .main-wrapper.shifted-collapsed {
+          margin-left: var(--nav-width-collapsed);
         }
 
         /* Sembunyikan mobile-top-toggle di desktop */
         .mobile-top-toggle {
-          display: none;
+          display: none !important; /* Gunakan !important untuk memastikan override */
         }
 
         /* Tampilkan Admin Panel text dan icon toggle di desktop */
@@ -365,12 +418,18 @@
         .l-navbar.collapsed .nav_logo {
           justify-content: center; /* Pusatkan ikon toggle */
         }
+
+        /* Pastikan konten utama tidak scroll horizontal di desktop */
+        .main-content {
+          overflow-x: hidden;
+        }
       }
 
       @media (max-width: 767px) {
         /* Mobile */
         body {
-          margin-left: 0; /* Tidak ada margin-left di mobile */
+          margin-left: 0 !important; /* Tidak ada margin-left di mobile */
+          overflow-x: auto; /* Izinkan scrollbar horizontal di mobile */
         }
         .l-navbar {
           left: -250px; /* Default tertutup di mobile */
@@ -381,21 +440,27 @@
           width: var(--nav-width);
         }
         .main-wrapper {
-          margin-left: 0; /* Di mobile, konten tidak bergeser */
+          margin-left: 0 !important; /* Di mobile, konten tidak bergeser */
+          overflow-x: auto; /* Izinkan main-wrapper untuk scroll horizontal di mobile */
         }
         .main-wrapper.shifted,
         .main-wrapper.shifted-collapsed {
-          margin-left: 0; /* Jangan geser di mobile */
+          margin-left: 0 !important; /* Jangan geser di mobile */
         }
 
         /* Tampilkan mobile-top-toggle di mobile */
         .mobile-top-toggle {
-          display: flex;
+          display: flex !important; /* Pastikan terlihat */
         }
 
         /* Sembunyikan Admin Panel text dan icon toggle di dalam sidebar di mobile */
         .nav_logo {
-          display: none; /* Sembunyikan seluruh nav_logo di mobile */
+          display: none !important; /* Sembunyikan seluruh nav_logo di mobile */
+        }
+
+        /* Izinkan konten utama untuk scroll horizontal di mobile jika diperlukan */
+        .main-content {
+          overflow-x: auto;
         }
       }
     </style>
@@ -435,6 +500,13 @@
               <i class="bx bx-user nav_icon"></i>
               <span class="nav_name">Kelola User</span>
             </a>
+            <a
+              href="/admin/kelola-transaksi"
+              class="nav_link {% if request.endpoint == '/admin/kelola-transaksi' %}active{% endif %}"
+            >
+              <i class="bx bx-transfer-alt nav_icon"></i>
+              <span class="nav_name">Kelola Transaksi</span>
+            </a>
           </div>
         </div>
         <a href="/logout" class="nav_link">
@@ -465,30 +537,25 @@
         const wrapper = document.getElementById("main-wrapper");
         const overlay = document.getElementById("body-overlay");
 
-        // Status awal sidebar desktop (asumsi terbuka)
-        // Ini harus selalu true saat di desktop, dan toggle akan mengubahnya.
         let isSidebarOpenDesktop = true;
 
         function updateUI() {
           if (window.innerWidth >= 768) {
-            // Logika Desktop
-            nav.classList.remove("show"); // Pastikan kelas show dari mobile tidak aktif
-            overlay.classList.remove("active"); // Pastikan overlay tidak aktif
+            nav.classList.remove("show");
+            overlay.classList.remove("active");
 
             if (isSidebarOpenDesktop) {
               nav.classList.remove("collapsed");
               wrapper.classList.remove("shifted-collapsed");
               wrapper.classList.add("shifted");
             } else {
-              // Collapsed state for desktop
               nav.classList.add("collapsed");
               wrapper.classList.remove("shifted");
               wrapper.classList.add("shifted-collapsed");
             }
           } else {
-            // Logika Mobile
-            nav.classList.remove("collapsed"); // Hapus kelas desktop-specific
-            wrapper.classList.remove("shifted", "shifted-collapsed"); // Pastikan wrapper tidak bergeser
+            nav.classList.remove("collapsed");
+            wrapper.classList.remove("shifted", "shifted-collapsed");
 
             if (nav.classList.contains("show")) {
               overlay.classList.add("active");
@@ -498,7 +565,6 @@
           }
         }
 
-        // Event listener untuk tombol toggle mobile (di luar sidebar)
         if (mobileToggle) {
           mobileToggle.addEventListener("click", () => {
             if (window.innerWidth < 768) {
@@ -508,10 +574,9 @@
           });
         }
 
-        // Event listener untuk tombol toggle desktop (nav_logo di dalam sidebar)
         if (desktopToggle) {
           desktopToggle.addEventListener("click", (e) => {
-            e.preventDefault(); // Mencegah navigasi jika nav_logo adalah tautan
+            e.preventDefault();
             if (window.innerWidth >= 768) {
               isSidebarOpenDesktop = !isSidebarOpenDesktop;
               updateUI();
@@ -519,7 +584,6 @@
           });
         }
 
-        // Event listener untuk overlay (hanya berfungsi di mobile)
         overlay.addEventListener("click", () => {
           if (window.innerWidth < 768) {
             nav.classList.remove("show");
@@ -527,21 +591,18 @@
           }
         });
 
-        // Inisialisasi saat halaman dimuat
         updateUI();
 
-        // Handle resize
         window.addEventListener("resize", () => {
-          // Ketika berpindah dari mobile ke desktop, pastikan sidebar desktop kembali ke mode terbuka
           if (window.innerWidth >= 768) {
-            // Jika sebelumnya di mobile dan sidebar terbuka, atau jika desktop collapsed
-            // kita asumsikan ingin kembali ke expanded.
-            if (nav.classList.contains("show") || !isSidebarOpenDesktop) {
-              isSidebarOpenDesktop = true; // Setel ke expanded
+            if (
+              nav.classList.contains("show") ||
+              nav.classList.contains("collapsed")
+            ) {
+              isSidebarOpenDesktop = true;
             }
-            nav.classList.remove("show"); // Pastikan kelas mobile 'show' dihapus
+            nav.classList.remove("show");
           } else {
-            // Ketika berpindah dari desktop ke mobile, pastikan sidebar mobile default tertutup
             nav.classList.remove("show");
           }
           updateUI();

@@ -92,6 +92,11 @@
     background-size: 0.65em auto !important;
   }
 
+  .form-select option {
+  background-color: rgba(40, 0, 80, 0.9); /* Warna dropdown saat terbuka */
+  color: white;
+}
+
   .form-control:focus,
   .form-select:focus {
     background-color: rgba(var(--card-base-color), var(--input-bg-alpha) + 0.05) !important;
@@ -151,6 +156,10 @@
           <option value="Bahan Pokok" {% if current_kategori == 'Bahan Pokok' %}selected{% endif %}>Bahan Pokok</option>
           <option value="Lainnya" {% if current_kategori == 'Lainnya' %}selected{% endif %}>Lainnya</option>
         </select>
+      </div>
+      <div class="mb-3">
+        <label for="nama" class="form-label">link gambar</label>
+        <input type="text" class="form-control" id="gambar_url" name="gambar_url" value="{{barang[6]}}" required>
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>

@@ -8,7 +8,7 @@
     --card-shadow-color: rgba(0, 0, 0, 0.4); /* Shadow card */
     --input-bg-alpha: 0.05; /* Transparansi input field */
     --input-border-color: rgba(255, 255, 255, 0.1);
-    --text-light: #f8f9fa; /* Teks putih */
+    --text-light: #ffffff; /* Teks putih */
     --text-muted: #adb5bd; /* Teks abu-abu untuk placeholder/sekunder */
     --accent-color: #7b2cff; /* Ungu cerah untuk aksen */
     --btn-primary-bg: #6900ff; /* Warna tombol utama */
@@ -58,7 +58,7 @@
   .form-glassmorphism {
     background-color: rgba(
       var(--card-base-color),
-      var(--card-alpha)
+      var(--accent-color)
     ) !important;
     border: 1px solid var(--card-border-color) !important;
     border-radius: 15px !important;
@@ -85,7 +85,7 @@
       var(--input-bg-alpha)
     ) !important;
     border: 1px solid var(--input-border-color) !important;
-    color: var(--btn-primary-bg) !important;
+    color: var(--text-light) !important;
     padding: 0.8rem 1rem !important;
     border-radius: 8px !important;
     font-size: 1rem;
@@ -98,6 +98,11 @@
     background-repeat: no-repeat !important;
     background-position: right 1rem center !important;
     background-size: 0.65em auto !important;
+  }
+
+  .form-select option {
+    background-color: rgba(40, 0, 80, 0.9); /* Warna dropdown saat terbuka */
+    color: white;
   }
 
   .form-control:focus,
@@ -181,6 +186,21 @@
           <option value="Bahan Pokok">Bahan Pokok</option>
           <option value="Lainnya">Lainnya</option>
         </select>
+      </div>
+      <div class="mb-3">
+        <label for="text" class="form-label"
+          >URL Gambar Produk (dari GitHub)</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="gambar_url"
+          name="gambar_url"
+          placeholder="Tempel URL gambar dari GitHub di sini. Contoh: https://raw.githubusercontent.com/user/repo/main/assets/product/baju.jpg"
+        />
+        <small class="form-text text-muted"
+          >Pastikan URL adalah link 'raw' dari GitHub.</small
+        >
       </div>
       <div class="mb-3">
         <label for="deskripsi" class="form-label">Deskripsi</label>

@@ -1,0 +1,719 @@
+:root {
+  /* Base RGB colors for easier RGBA calculations */
+  --base-dark-blue-rgb: 10, 25, 47; /* Tech background color */
+  --base-card-rgb: 26, 32, 44; /* Tech card background color (default dark) */
+  --base-light-blue-rgb: 97, 218, 251; /* Tech accent (cyan) - default */
+  --base-blue-rgb: 0, 123, 255; /* Standard blue for primary buttons - default */
+
+  /* Specific colors for Glassmorphism White/Purple theme (from kontak.html/tentang.html) */
+  --base-white-rgb: 255, 255, 255; /* For white glassmorphism cards */
+  --base-purple-rgb: 123, 44, 255; /* Primary purple accent (#7b2cff) */
+  --base-light-purple-rgb: 168, 121, 255; /* Light purple for icons (#a879ff) */
+  --base-btn-primary-purple-rgb: 105, 0, 255; /* Darker purple for main buttons (#6900ff) */
+
+  --base-gray-rgb: 226, 232, 240; /* Tech light text */
+  --base-dark-gray-rgb: 74, 85, 104; /* Tech darker text */
+
+  /* Glassmorphism properties */
+  --alpha-low: 0.1; /* Transparansi rendah untuk background */
+  --alpha-medium: 0.2; /* Transparansi sedang untuk border */
+  --alpha-input: 0.08; /* Transparansi untuk input fields */
+  --blur-amount: 15px; /* Jumlah blur */
+  --saturation-amount: 180%; /* Saturasi untuk efek kaca */
+
+  /* Derived Colors and Styles */
+  --bg-main: url("https://i.pinimg.com/736x/65/65/48/6565488b7b3db6985c6981f6898ec42f.jpg")
+    no-repeat center center fixed; /* Background utama */
+  --bg-main-size: cover;
+
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --card-hover-shadow-accent: rgba(var(--base-light-blue-rgb), 0.4);
+
+  --text-light: rgb(var(--base-gray-rgb));
+  --text-accent: rgb(var(--base-light-blue-rgb)); /* Default accent is cyan */
+  --text-muted-placeholder: rgba(var(--base-gray-rgb), 0.7);
+
+  --input-border-focus: rgb(var(--base-light-blue-rgb));
+  --input-shadow-focus: rgba(var(--base-light-blue-rgb), 0.25);
+}
+
+body {
+  background: var(--bg-main);
+  background-size: var(--bg-main-size);
+  color: var(--text-light);
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+h2,
+h5 {
+  color: var(
+    --text-accent
+  ); /* Warna judul utama dan card title (default cyan) */
+  text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.3); /* Sedikit glow */
+}
+
+/* Card Styling (Glassmorphism) for Product Cards (default dark theme) */
+.product-card .card {
+  background-color: rgba(var(--base-card-rgb), var(--alpha-low)) !important;
+  border: 1px solid rgba(var(--base-light-blue-rgb), var(--alpha-medium)) !important;
+  border-radius: 15px !important;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 8px 32px 0 var(--card-shadow) !important;
+  backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation-amount)) !important;
+  -webkit-backdrop-filter: blur(var(--blur-amount))
+    saturate(var(--saturation-amount)) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.product-card .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px 0 var(--card-hover-shadow-accent) !important;
+  border-color: rgb(var(--base-light-blue-rgb)) !important;
+}
+
+.product-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(var(--base-light-blue-rgb), 0.1);
+}
+
+.product-card .card-body {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.product-card .card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text-accent) !important;
+}
+
+.product-card .card-text {
+  font-size: 0.95rem;
+  color: var(--text-light) !important;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+/* Stock text on card */
+.stock-text {
+  color: var(--text-light);
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+}
+
+/* Warna button berdasarkan tema (override Bootstrap) */
+.product-card .btn,
+.btn-primary,
+.btn-info,
+.btn-success,
+.btn-warning,
+.btn-danger,
+.btn-dark,
+.btn-secondary {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border-radius: 8px !important;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  width: 100%;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.product-card .btn:hover,
+.btn-primary:hover,
+.btn-info:hover,
+.btn-success:hover,
+.btn-warning:hover,
+.btn-danger:hover,
+.btn-dark:hover,
+.btn-secondary:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Default Primary Button (blue) */
+.btn-primary {
+  background-color: rgb(var(--base-blue-rgb)) !important;
+  border-color: rgb(var(--base-blue-rgb)) !important;
+}
+.btn-primary:hover {
+  background-color: rgba(var(--base-blue-rgb), 0.8) !important;
+  border-color: rgba(var(--base-blue-rgb), 0.8) !important;
+  transform: translateY(-2px);
+}
+
+/* Info Button (purple) */
+.btn-info {
+  background-color: rgb(var(--base-purple-rgb)) !important;
+  border-color: rgb(var(--base-purple-rgb)) !important;
+}
+.btn-info:hover {
+  background-color: rgba(var(--base-purple-rgb), 0.8) !important;
+  border-color: rgba(var(--base-purple-rgb), 0.8) !important;
+  transform: translateY(-2px);
+}
+
+/* Other Bootstrap Button Colors (kept as is) */
+.btn-success {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  width: auto !important; /* Ensure full width for add button */
+}
+.btn-success:hover {
+  background-color: #218838 !important;
+  border-color: #218838 !important;
+  transform: translateY(-2px);
+}
+.btn-warning {
+  background-color: #ffc107 !important;
+  border-color: #ffc107 !important;
+  color: rgb(var(--base-dark-blue-rgb)) !important;
+}
+.btn-warning:hover {
+  background-color: #e0a800 !important;
+  border-color: #e0a800 !important;
+  transform: translateY(-2px);
+}
+.btn-danger {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  width: auto !important; /* Ensure full width for remove button */
+}
+.btn-danger:hover {
+  background-color: #c82333 !important;
+  border-color: #c82333 !important;
+  transform: translateY(-2px);
+}
+.btn-dark {
+  background-color: #343a40 !important;
+  border-color: #343a40 !important;
+}
+.btn-dark:hover {
+  background-color: #23272b !important;
+  border-color: #23272b !important;
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  width: auto !important; /* Ensure full width for secondary buttons */
+}
+.btn-secondary:hover {
+  background-color: #5a6268 !important;
+  border-color: #5a6268 !important;
+  transform: translateY(-2px);
+}
+
+/* Search Bar Styling (Glassmorphism Inputs) */
+.input-group .form-control,
+.input-group .btn {
+  border-radius: 8px !important;
+  border: 1px solid rgba(var(--base-light-blue-rgb), var(--alpha-medium)) !important;
+  color: var(--text-light) !important;
+  background-color: rgba(var(--base-card-rgb), var(--alpha-input)) !important;
+  padding: 0.8rem 1rem !important;
+}
+.input-group .form-control::placeholder {
+  color: var(--text-muted-placeholder) !important;
+}
+.input-group .form-control:focus {
+  border-color: var(--input-border-focus) !important;
+  box-shadow: 0 0 0 0.25rem var(--input-shadow-focus) !important;
+  background-color: rgba(var(--base-card-rgb), var(--alpha-input)) !important;
+  color: var(--text-light) !important;
+}
+.input-group .btn-primary {
+  background-color: rgb(var(--base-blue-rgb)) !important;
+  border-color: rgb(var(--base-blue-rgb)) !important;
+  box-shadow: none !important;
+}
+.input-group .btn-primary:hover {
+  background-color: rgba(var(--base-blue-rgb), 0.8) !important;
+  border-color: rgba(var(--base-blue-rgb), 0.8) !important;
+}
+
+/* Cart Icon Styling */
+.cart-icon-container {
+  position: fixed;
+  top: 75px;
+  right: 25px;
+  z-index: 1050;
+}
+
+.cart-icon {
+  font-size: 2rem;
+  color: var(--text-accent) !important;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+  text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.5);
+}
+.cart-icon:hover {
+  color: rgb(var(--base-blue-rgb)) !important;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background-color: #dc3545 !important;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Styling - Product Detail & Cart (Glassmorphism) */
+.modal-content {
+  background-color: rgba(var(--base-card-rgb), var(--alpha-low)) !important;
+  color: var(--text-light) !important;
+  border: 1px solid rgba(var(--base-light-blue-rgb), var(--alpha-medium)) !important;
+  border-radius: 15px !important;
+  backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation-amount)) !important;
+  -webkit-backdrop-filter: blur(var(--blur-amount))
+    saturate(var(--saturation-amount)) !important;
+  box-shadow: 0 8px 32px 0 var(--card-shadow) !important;
+}
+.modal-header {
+  background-color: rgba(var(--base-dark-blue-rgb), 0.5) !important;
+  color: var(--text-accent) !important;
+  border-bottom: 1px solid rgba(var(--base-light-blue-rgb), 0.1) !important;
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;
+}
+.modal-title {
+  color: var(--text-accent) !important;
+}
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+.modal-body {
+  color: var(--text-light) !important;
+}
+.modal-footer {
+  border-top: 1px solid rgba(var(--base-light-blue-rgb), 0.1) !important;
+  border-bottom-left-radius: 15px !important;
+  border-bottom-right-radius: 15px !important;
+}
+.modal-footer .btn {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#modalProductPrice {
+  color: var(--text-accent) !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(var(--base-light-blue-rgb), 0.3);
+}
+
+/* Cart Modal specific */
+#cartItemsContainer .text-muted {
+  color: rgba(var(--base-gray-rgb), 0.8) !important;
+}
+#cartItemsContainer h6 {
+  color: var(--text-accent) !important;
+}
+#cartItemsContainer .fw-bold {
+  color: var(--text-accent) !important;
+}
+#cartTotal {
+  color: var(--text-accent) !important;
+  font-size: 1.75rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.4);
+}
+#cartItemsContainer .btn-outline-secondary {
+  border-color: rgba(var(--base-dark-gray-rgb), 0.5) !important;
+  color: var(--text-light) !important;
+  background-color: transparent !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+#cartItemsContainer .btn-outline-secondary:hover {
+  background-color: rgba(var(--base-light-blue-rgb), 0.1) !important;
+  color: var(--text-accent) !important;
+}
+
+/* NEW CSS for Description Formatting */
+#modalProductDescription {
+  white-space: pre-wrap; /* Preserve whitespace and wrap lines */
+}
+
+/* --- Styles from kontak.html (Contact Page) --- */
+.contact-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://source.unsplash.com/random/1200x400/?contact-us,office")
+      no-repeat center center/cover;
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+  margin-bottom: 40px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(var(--base-white-rgb), 0.2); /* Use white for card border */
+}
+
+.contact-header h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.contact-header p {
+  font-size: 1.25rem;
+  color: var(--text-light);
+}
+
+.contact-info .icon-box {
+  text-align: center;
+  padding: 30px;
+  background-color: rgba(var(--base-white-rgb), var(--alpha-low)) !important;
+  border: 1px solid rgba(var(--base-white-rgb), 0.2) !important; /* Use white for card border */
+  border-radius: 15px !important;
+  box-shadow: 0 8px 32px 0 var(--card-shadow) !important;
+  backdrop-filter: blur(15px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-light);
+}
+
+.contact-info .icon-box:hover {
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important;
+  transform: translateY(-2px);
+}
+
+.contact-info .icon-box i {
+  font-size: 3rem;
+  color: rgb(var(--base-light-purple-rgb)); /* Use light purple for icons */
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(var(--base-light-purple-rgb), 0.5);
+}
+
+.contact-info .icon-box h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--text-light);
+}
+
+.contact-info .icon-box p {
+  color: var(--text-light);
+}
+
+.hubungi-kami {
+  padding: 40px;
+  background-color: rgba(var(--base-white-rgb), var(--alpha-low)) !important;
+  border: 1px solid rgba(var(--base-white-rgb), 0.2) !important; /* Use white for card border */
+  border-radius: 15px !important;
+  box-shadow: 0 8px 32px 0 var(--card-shadow) !important;
+  backdrop-filter: blur(15px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+  transition: all 0.3s ease;
+  color: var(--text-light);
+}
+
+.hubungi-kami:hover {
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55) !important;
+  transform: translateY(-2px);
+}
+
+.hubungi-kami h2 {
+  color: var(--text-light);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Gaya konsisten untuk form elements */
+.form-label {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.form-control {
+  background-color: rgba(
+    var(--base-white-rgb),
+    0.05
+  ) !important; /* Use white base for input bg */
+  border: 1px solid rgba(var(--base-white-rgb), 0.1) !important; /* Use white base for input border */
+  color: var(--text-light) !important;
+  padding: 0.8rem 1rem !important;
+  border-radius: 8px !important;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  background-color: rgba(var(--base-white-rgb), 0.1) !important;
+  border-color: rgb(
+    var(--base-purple-rgb)
+  ) !important; /* Use purple accent for focus */
+  box-shadow: 0 0 0 0.25rem rgba(var(--base-purple-rgb), 0.3) !important;
+}
+
+.form-control::placeholder {
+  color: rgba(var(--base-gray-rgb), 0.7) !important;
+}
+
+/* Specific primary button for contact form (darker purple) */
+.hubungi-kami .btn-primary {
+  background-color: rgb(var(--base-btn-primary-purple-rgb)) !important;
+  border-color: rgb(var(--base-btn-primary-purple-rgb)) !important;
+  color: var(--text-light) !important;
+  font-weight: 600;
+  padding: 0.8rem 1.5rem !important;
+  border-radius: 8px !important;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: auto; /* Override default width 100% for this button if needed, but d-grid makes it 100% */
+}
+
+.hubungi-kami .btn-primary:hover {
+  background-color: rgba(var(--base-btn-primary-purple-rgb), 0.8) !important;
+  border-color: rgba(var(--base-btn-primary-purple-rgb), 0.8) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.map-container {
+  overflow: hidden;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  position: relative;
+  height: 0;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 var(--card-shadow);
+  margin-top: 40px;
+}
+
+.map-container iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  border: 0;
+  border-radius: 15px;
+}
+
+/* Styling for alert */
+.alert {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.alert-success {
+  background-color: rgba(60, 179, 113, 0.2) !important;
+  color: #90ee90 !important;
+  border-color: #90ee90 !important;
+}
+.alert-danger {
+  background-color: rgba(255, 69, 0, 0.2) !important;
+  color: #ffb6c1 !important;
+  border-color: #ffb6c1 !important;
+}
+
+/* --- Styles from tentang.html (About Page) --- */
+/* Gaya umum untuk card Glassmorphism (putih) */
+.glass-card {
+  padding: 40px;
+  background-color: rgba(var(--base-white-rgb), var(--alpha-low));
+  border: 1px solid rgba(var(--base-white-rgb), 0.2);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 var(--card-shadow);
+  backdrop-filter: blur(15px) saturate(200%);
+  transition: all 0.3s ease;
+  color: var(--text-light);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.glass-card-no-center {
+  padding: 40px;
+  background-color: rgba(var(--base-white-rgb), var(--alpha-low));
+  border: 1px solid rgba(var(--base-white-rgb), 0.2);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 var(--card-shadow);
+  backdrop-filter: blur(15px) saturate(200%);
+  -webkit-backdrop-filter: blur(15px) saturate(200%);
+  transition: all 0.3s ease;
+  color: var(--text-light);
+  height: 100%;
+  text-align: left;
+}
+
+.glass-card:hover,
+.glass-card-no-center:hover {
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Styling untuk Header Halaman "Tentang Kami" */
+.about-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("https://source.unsplash.com/random/1200x400/?about-us,teamwork")
+      no-repeat center center/cover;
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+  margin-bottom: 40px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(var(--base-white-rgb), 0.2);
+}
+
+.about-header h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.about-header p {
+  font-size: 1.25rem;
+  color: var(--text-light);
+}
+
+/* Styling untuk judul di dalam card */
+.glass-card h2,
+.glass-card-no-center h2 {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: var(--text-light);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+}
+
+.glass-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: var(--text-light);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.glass-card p,
+.glass-card-no-center p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-light);
+}
+
+/* Styling untuk ikon dalam card secara umum */
+.glass-card i {
+  font-size: 3.5rem;
+  color: rgb(var(--base-light-purple-rgb)); /* Use light purple for icons */
+  margin-bottom: 25px;
+  text-shadow: 0 0 15px rgba(var(--base-light-purple-rgb), 0.6);
+}
+
+/* Animasi pulse */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--base-white-rgb), 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(var(--base-white-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--base-white-rgb), 0);
+  }
+}
+
+/* Styling khusus untuk gambar profil di dalam glass-card */
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 3px solid rgb(var(--base-purple-rgb)); /* Use purple accent for border */
+  animation: pulse 2.5s infinite;
+}
+
+/* Styling untuk ikon sosial dalam profil */
+.social-icons-profile {
+  margin-top: 20px;
+}
+
+.social-icons-profile a {
+  margin: 0 15px;
+  font-size: 1.2rem;
+  color: rgb(
+    var(--base-light-purple-rgb)
+  ); /* Use light purple for social icons */
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons-profile a:hover {
+  color: rgb(var(--base-purple-rgb)); /* Use purple accent on hover */
+  transform: translateY(-2px);
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+  .about-header h1 {
+    font-size: 2.5rem;
+  }
+  .about-header p {
+    font-size: 1rem;
+  }
+  .glass-card,
+  .glass-card-no-center {
+    padding: 25px;
+  }
+  .glass-card h2,
+  .glass-card-no-center h2 {
+    font-size: 1.8rem;
+  }
+  .glass-card h3 {
+    font-size: 1.5rem;
+  }
+  .glass-card i {
+    font-size: 2.5rem;
+  }
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+  .social-icons-profile a {
+    font-size: 1rem;
+    margin: 0 10px;
+  }
+  .glass-card p,
+  .glass-card-no-center p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .glass-card,
+  .glass-card-no-center {
+    margin-bottom: 20px;
+  }
+}

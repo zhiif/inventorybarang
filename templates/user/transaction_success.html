@@ -1,0 +1,24 @@
+{% extends 'user/layout.html' %} {% block isi %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halaman Saya</title>
+    <link rel="stylesheet" href="static/user.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5 py-5">
+      <h2 class="text-success mb-4 text-center">Checkout Berhasil!</h2>
+      <p class="lead text-center">Terima kasih telah berbelanja dengan kami.</p>
+
+      <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">Kembali ke Beranda</a>
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>

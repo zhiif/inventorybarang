@@ -14,6 +14,8 @@
     --btn-primary-bg: #6900ff; /* Warna tombol utama */
     --btn-primary-hover-bg: #8a2be2; /* Warna tombol hover */
     --icon-color: #a879ff; /* Warna untuk ikon (jika ada) */
+    --blur-amount: 15px; /* Jumlah blur */
+    --saturation-amount: 180%; /* Saturasi untuk efek kaca */
 
     /* Variabel tambahan spesifik untuk tabel */
     --table-bg: rgba(
@@ -50,7 +52,7 @@
     color: var(--text-light); /* Teks default putih */
     min-height: 100vh;
     margin: 0;
-    overflow-x: hidden;
+    /* overflow-x: hidden; <-- Dihapus karena sudah diatur di layout.html untuk mobile/desktop */
     position: relative;
   }
 
@@ -110,13 +112,14 @@
     box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important;
     backdrop-filter: blur(15px) saturate(200%) !important;
     -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
-    overflow-x: auto; /* Agar tabel tetap responsif */
+    overflow-x: auto; /* Agar tabel tetap responsif dan bisa discroll horizontal */
     padding: 20px; /* Padding di dalam wrapper */
   }
 
   /* Styling Tabel */
   .table {
     width: 100%;
+    min-width: 768px; /* Atur lebar minimum tabel agar bisa di-scroll di mobile jika kontennya lebar */
     margin-bottom: 0 !important; /* Hapus margin bawah default Bootstrap */
     color: var(--text-light);
     border-collapse: separate; /* Penting untuk border-radius di tbody */
@@ -148,6 +151,7 @@
     border-color: var(--table-border-color) !important;
     vertical-align: middle;
     padding: 10px 15px;
+    text-align: center;
   }
 
   .table-striped tbody tr:nth-of-type(odd) td {
@@ -202,6 +206,70 @@
   .table td form:last-child button.btn {
     margin-right: 0;
   }
+
+  /* Media Queries untuk scrollbar horizontal khusus mobile */
+  @media (max-width: 767px) {
+    /* Pastikan gambar tidak terlalu besar di mobile */
+    .table tbody img {
+      max-width: 50px;
+      height: auto;
+    }
+  }
+  /* --- STYLING BARU UNTUK DESKRIPSI (READ MORE) --- */
+  .description-cell {
+    text-align: left; /* Rata kiri teks dalam sel */
+    max-width: 300px; /* Sesuaikan sesuai kebutuhan */
+    word-wrap: break-word; /* Kompatibilitas lama */
+    overflow-wrap: break-word; /* Rekomendasi baru */
+  }
+
+  .description-cell .read-more-btn {
+    background: none;
+    border: none;
+    color: var(--accent-color); /* Atau warna lain yang Anda inginkan */
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: inherit; /* Agar ukuran font sama dengan teks sekitar */
+  }
+  .description-cell .read-more-btn:hover {
+    text-decoration: none;
+    color: var(--btn-primary-hover-bg); /* Sedikit lebih gelap saat hover */
+  }
+
+  /* Styling modal glassmorphism */
+  .modal-content {
+    background-color: rgba(
+      var(--card-base-color),
+      var(--card-alpha)
+    ); /* Pastikan variabel sudah didefinisikan */
+    border: 1px solid var(--card-border-color); /* Pastikan variabel sudah didefinisikan */
+    border-radius: 15px;
+    backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation-amount));
+    -webkit-backdrop-filter: blur(var(--blur-amount))
+      saturate(var(--saturation-amount));
+    box-shadow: 0 8px 32px 0 var(--card-shadow-color);
+    color: var(--text-light);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Sesuaikan border */
+    color: var(--text-light);
+  }
+
+  .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%); /* Warna putih untuk tombol close */
+  }
+
+  .modal-body {
+    color: var(--text-light);
+    white-space: pre-wrap; /* Penting untuk mempertahankan baris baru dan spasi di deskripsi */
+    word-break: break-word; /* Memecah kata jika terlalu panjang */
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Sesuaikan border */
+  }
 </style>
 
 <div class="container">
@@ -209,6 +277,8 @@
 
   <a class="btn btn-primary mb-3" href="/admin/form-tambah-barang"
     >+ Tambah Barang</a
+  >
+
   >
 
   <div class="table-responsive-wrapper">
@@ -221,6 +291,7 @@
           <th>Stok</th>
           <th>Kategori</th>
           <th>Deskripsi</th>
+          <th>Link produk</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -228,19 +299,39 @@
         {% for isi in hasil %}
         <tr>
           <td>{{loop.index}}</td>
-          <td>{{isi[1]}}</td>
-          <td>{{isi[2]}}</td>
-          <td>{{isi[3]}}</td>
-          <td>{{isi[4]}}</td>
-          <td>{{isi[5]}}</td>
+          <td>{{isi['nama']}}</td>
+          <td>Rp{{isi['harga_formatted']}}</td>
+          <td>{{isi['stok']}}</td>
+          <td>{{isi['kategori']}}</td>
+          <td class="description-cell">
+            {{ isi['short_description'] }} {% if isi['show_read_more'] %}
+            <button
+              type="button"
+              class="read-more-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#descriptionModal"
+              data-full-description="{{ isi['full_description'] }}"
+              data-item-name="{{ isi['nama'] }}"
+            >
+              Baca Selengkapnya
+            </button>
+            {% endif %}
+          </td>
+
+          <td>
+            <img src="{{isi['gambar_url'] if isi['gambar_url'] else
+            'https://via.placeholder.com/200/cccccc/ffffff?text=No+Image'}}" {#
+            Menggunakan isi['gambar_url'] dan default #} alt="Gambar Barang"
+            style="width: 85px; height: 85px; object-fit: cover" />
+          </td>
           <td>
             <a
-              href="/admin/form-edit-barang/{{isi[0]}}"
+              href="/admin/form-edit-barang//{{isi['id']}}"
               class="btn btn-sm btn-warning"
               >Edit</a
             >
             <form
-              action="/admin/hapus-barang/{{isi[0]}}"
+              action="/admin/hapus-barang//{{isi['id']}}"
               method="POST"
               style="display: inline"
               onsubmit="return confirm('Yakin ingin menghapus barang ini?');"
@@ -254,4 +345,59 @@
     </table>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="descriptionModal"
+  tabindex="-1"
+  aria-labelledby="descriptionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="descriptionModalLabel">
+          Deskripsi Barang: <span id="modalItemName"></span>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" id="modalDescriptionBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{# Script untuk mengisi modal deskripsi, harus di dalam block content atau
+setelah modal #}
+<script>
+  document
+    .getElementById("descriptionModal")
+    .addEventListener("show.bs.modal", function (event) {
+      // Tombol yang memicu modal
+      const button = event.relatedTarget;
+
+      // Ambil data dari atribut data-*
+      const fullDescription = button.getAttribute("data-full-description");
+      const itemName = button.getAttribute("data-item-name");
+
+      // Update konten modal
+      const modalTitleSpan = this.querySelector("#modalItemName");
+      const modalBodyDiv = this.querySelector("#modalDescriptionBody");
+
+      if (modalTitleSpan) {
+        modalTitleSpan.textContent = itemName;
+      }
+      if (modalBodyDiv) {
+        modalBodyDiv.textContent = fullDescription; // Menggunakan textContent agar baris baru dari Python tetap terlihat
+      }
+    });
+</script>
 {%endblock%}

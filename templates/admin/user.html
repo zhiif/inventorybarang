@@ -50,7 +50,7 @@
     color: var(--text-light); /* Teks default putih */
     min-height: 100vh;
     margin: 0;
-    overflow-x: hidden;
+    /* overflow-x: hidden; <-- Dihapus karena sudah diatur di layout.html untuk mobile/desktop */
     position: relative;
   }
 
@@ -109,13 +109,14 @@
     box-shadow: 0 8px 32px 0 var(--card-shadow-color) !important;
     backdrop-filter: blur(15px) saturate(200%) !important;
     -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
-    overflow-x: auto; /* Agar tabel tetap responsif */
+    overflow-x: auto; /* Agar tabel tetap responsif dan bisa discroll horizontal */
     padding: 20px; /* Padding di dalam wrapper */
   }
 
   /* Styling Tabel */
   .table {
     width: 100%;
+    min-width: 600px; /* Atur lebar minimum tabel agar bisa di-scroll di mobile jika kontennya lebar */
     margin-bottom: 0 !important; /* Hapus margin bawah default Bootstrap */
     color: var(--text-light);
     border-collapse: separate; /* Penting untuk border-radius di tbody */
@@ -147,6 +148,7 @@
     border-color: var(--table-border-color) !important;
     vertical-align: middle;
     padding: 10px 15px;
+    text-align: center; /* Added: Center the text within table cells */
   }
 
   .table-striped tbody tr:nth-of-type(odd) td {

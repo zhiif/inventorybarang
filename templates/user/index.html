@@ -1,1201 +1,517 @@
 {% extends 'user/layout.html' %} {% block isi %}
-<style>
-  /* Variabel CSS untuk warna tema teknologi dan Glassmorphism */
-  :root {
-    /* Base RGB colors for easier RGBA calculations */
-    --base-dark-blue-rgb: 10, 25, 47; /* Tech background color */
-    --base-card-rgb: 26, 32, 44; /* Tech card background color */
-    --base-light-blue-rgb: 97, 218, 251; /* Tech accent (cyan) */
-    --base-blue-rgb: 0, 123, 255; /* Standard blue for primary buttons */
-    --base-purple-rgb: 130, 87, 229; /* Tech accent (purple) */
-    --base-gray-rgb: 226, 232, 240; /* Tech light text */
-    --base-dark-gray-rgb: 74, 85, 104; /* Tech darker text */
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halaman Saya</title>
+    <link rel="stylesheet" href="static/user.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5 py-4">
+      <h2 class="text-center mb-4 fw-bold text-light">Our Featured Products</h2>
 
-    /* Glassmorphism properties */
-    --alpha-low: 0.1; /* Transparansi rendah untuk background */
-    --alpha-medium: 0.2; /* Transparansi sedang untuk border */
-    --alpha-input: 0.08; /* Transparansi untuk input fields */
-    --blur-amount: 15px; /* Jumlah blur */
-    --saturation-amount: 180%; /* Saturasi untuk efek kaca */
-
-    /* Derived Colors and Styles */
-    --bg-main: url("https://i.pinimg.com/736x/65/65/48/6565488b7b3db6985c6981f6898ec42f.jpg")
-      no-repeat center center fixed; /* Background utama */
-    --bg-main-size: cover;
-
-    --card-bg-transparent: rgba(var(--base-card-rgb), var(--alpha-low));
-    --card-border-transparent: rgba(
-      var(--base-light-blue-rgb),
-      var(--alpha-medium)
-    );
-    --card-shadow: rgba(0, 0, 0, 0.4);
-    --card-hover-shadow-accent: rgba(var(--base-light-blue-rgb), 0.4);
-
-    --text-light: rgb(var(--base-gray-rgb));
-    --text-accent: rgb(var(--base-light-blue-rgb));
-    --text-muted-placeholder: rgba(var(--base-gray-rgb), 0.7);
-
-    --input-bg-transparent: rgba(var(--base-card-rgb), var(--alpha-input));
-    --input-border-focus: rgb(var(--base-light-blue-rgb));
-    --input-shadow-focus: rgba(var(--base-light-blue-rgb), 0.25);
-
-    --btn-primary-bg: rgb(var(--base-blue-rgb));
-    --btn-primary-hover-bg: rgba(var(--base-blue-rgb), 0.8);
-    --btn-info-bg: rgb(var(--base-purple-rgb));
-    --btn-info-hover-bg: rgba(var(--base-purple-rgb), 0.8);
-
-    --modal-bg-transparent: rgba(var(--base-card-rgb), var(--alpha-low));
-    --modal-header-bg-transparent: rgba(var(--base-dark-blue-rgb), 0.5);
-  }
-
-  body {
-    background: var(--bg-main);
-    background-size: var(--bg-main-size);
-    color: var(--text-light);
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    min-height: 100vh;
-    margin: 0;
-    overflow-x: hidden;
-  }
-
-  h2,
-  h5 {
-    color: var(--text-accent); /* Warna judul utama dan card title */
-    text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.3); /* Sedikit glow */
-  }
-
-  /* Card Styling (Glassmorphism) */
-  .product-card .card {
-    background-color: var(
-      --card-bg-transparent
-    ) !important; /* Background transparan */
-    border: 1px solid var(--card-border-transparent) !important; /* Border tipis transparan */
-    border-radius: 15px !important; /* Sudut lebih membulat */
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-      border-color 0.3s ease;
-    box-shadow: 0 8px 32px 0 var(--card-shadow) !important; /* Bayangan awal */
-    backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation-amount)) !important; /* Efek Glassmorphism */
-    -webkit-backdrop-filter: blur(var(--blur-amount))
-      saturate(var(--saturation-amount)) !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-  }
-
-  .product-card .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px 0 var(--card-hover-shadow-accent) !important; /* Bayangan lebih intens */
-    border-color: rgb(
-      var(--base-light-blue-rgb)
-    ) !important; /* Border menjadi lebih terang */
-  }
-
-  .product-card .card-img-top {
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 1px solid rgba(var(--base-light-blue-rgb), 0.1); /* Garis pemisah gambar dan konten */
-  }
-
-  .product-card .card-body {
-    padding: 20px;
-    flex-grow: 1;
-  }
-
-  .product-card .card-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text-accent) !important;
-  }
-
-  .product-card .card-text {
-    font-size: 0.95rem;
-    color: var(--text-light) !important; /* Teks deskripsi */
-    line-height: 1.5;
-    flex-grow: 1;
-  }
-
-  /* Warna button berdasarkan tema (override Bootstrap) */
-  .product-card .btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border-radius: 8px !important;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease,
-      border-color 0.3s ease, box-shadow 0.3s ease;
-    display: block;
-    width: 100%;
-    color: white !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .product-card .btn:hover {
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-  }
-
-  .product-card .btn-primary {
-    background-color: var(--btn-primary-bg) !important;
-    border-color: var(--btn-primary-bg) !important;
-  }
-  .product-card .btn-primary:hover {
-    background-color: var(--btn-primary-hover-bg) !important;
-    border-color: var(--btn-primary-hover-bg) !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-info {
-    background-color: var(--btn-info-bg) !important; /* Ungu untuk info */
-    border-color: var(--btn-info-bg) !important;
-  }
-  .product-card .btn-info:hover {
-    background-color: var(--btn-info-hover-bg) !important;
-    border-color: var(--btn-info-hover-bg) !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-success {
-    background-color: #28a745 !important; /* Hijau standar */
-    border-color: #28a745 !important;
-  }
-  .product-card .btn-success:hover {
-    background-color: #218838 !important;
-    border-color: #218838 !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-warning {
-    background-color: #ffc107 !important;
-    border-color: #ffc107 !important;
-    color: rgb(
-      var(--base-dark-blue-rgb)
-    ) !important; /* Teks gelap di tombol kuning */
-  }
-  .product-card .btn-warning:hover {
-    background-color: #e0a800 !important;
-    border-color: #e0a800 !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-  }
-  .product-card .btn-danger:hover {
-    background-color: #c82333 !important;
-    border-color: #c82333 !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-dark {
-    background-color: #343a40 !important;
-    border-color: #343a40 !important;
-  }
-  .product-card .btn-dark:hover {
-    background-color: #23272b !important;
-    border-color: #23272b !important;
-    transform: translateY(-2px);
-  }
-  .product-card .btn-secondary {
-    background-color: #6c757d !important;
-    border-color: #6c757d !important;
-  }
-  .product-card .btn-secondary:hover {
-    background-color: #5a6268 !important;
-    border-color: #5a6268 !important;
-    transform: translateY(-2px);
-  }
-
-  /* Search Bar Styling (Glassmorphism Inputs) */
-  .input-group .form-control,
-  .input-group .btn {
-    border-radius: 8px !important;
-    border: 1px solid var(--input-border-transparent) !important;
-    color: var(--text-light) !important;
-    background-color: var(
-      --input-bg-transparent
-    ) !important; /* Background transparan */
-    padding: 0.8rem 1rem !important; /* Konsisten dengan input form */
-  }
-  .input-group .form-control::placeholder {
-    color: var(--text-muted-placeholder) !important;
-  }
-  .input-group .form-control:focus {
-    border-color: var(--input-border-focus) !important;
-    box-shadow: 0 0 0 0.25rem var(--input-shadow-focus) !important;
-    background-color: var(--input-bg-transparent) !important;
-    color: var(--text-light) !important;
-  }
-  .input-group .btn-primary {
-    background-color: var(--btn-primary-bg) !important;
-    border-color: var(--btn-primary-bg) !important;
-    box-shadow: none !important; /* No extra shadow on search button */
-  }
-  .input-group .btn-primary:hover {
-    background-color: var(--btn-primary-hover-bg) !important;
-    border-color: var(--btn-primary-hover-bg) !important;
-  }
-
-  /* Cart Icon Styling */
-  .cart-icon-container {
-    position: fixed;
-    top: 75px;
-    right: 25px;
-    z-index: 1050;
-  }
-
-  .cart-icon {
-    font-size: 2rem;
-    color: var(--text-accent) !important; /* Ikon keranjang warna aksen */
-    cursor: pointer;
-    position: relative;
-    transition: color 0.3s ease;
-    text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.5); /* Glow ikon */
-  }
-  .cart-icon:hover {
-    color: rgb(var(--base-blue-rgb)) !important; /* Berubah warna saat hover */
-  }
-
-  .cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    padding: 5px 10px;
-    border-radius: 50%;
-    background-color: #dc3545 !important; /* Merah untuk badge */
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Modal Styling - Product Detail & Cart (Glassmorphism) */
-  .modal-content {
-    background-color: var(
-      --modal-bg-transparent
-    ) !important; /* Background transparan */
-    color: var(--text-light) !important;
-    border: 1px solid var(--card-border-transparent) !important; /* Border transparan */
-    border-radius: 15px !important; /* Sudut membulat */
-    backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation-amount)) !important; /* Efek Glassmorphism */
-    -webkit-backdrop-filter: blur(var(--blur-amount))
-      saturate(var(--saturation-amount)) !important;
-    box-shadow: 0 8px 32px 0 var(--card-shadow) !important; /* Shadow */
-  }
-  .modal-header {
-    background-color: var(
-      --modal-header-bg-transparent
-    ) !important; /* Header modal transparan gelap */
-    color: var(--text-accent) !important;
-    border-bottom: 1px solid rgba(var(--base-light-blue-rgb), 0.1) !important;
-    border-top-left-radius: 15px !important; /* Pastikan sudut sesuai parent */
-    border-top-right-radius: 15px !important;
-  }
-  .modal-title {
-    color: var(--text-accent) !important;
-  }
-  .btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%); /* Warna silang putih */
-  }
-  .modal-body {
-    color: var(--text-light) !important;
-  }
-  .modal-footer {
-    border-top: 1px solid rgba(var(--base-light-blue-rgb), 0.1) !important;
-    border-bottom-left-radius: 15px !important; /* Pastikan sudut sesuai parent */
-    border-bottom-right-radius: 15px !important;
-  }
-  .modal-footer .btn {
-    border-radius: 8px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  #modalProductPrice {
-    color: var(--text-accent) !important; /* Harga di modal */
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-shadow: 0 0 8px rgba(var(--base-light-blue-rgb), 0.3);
-  }
-
-  /* Cart Modal specific */
-  #cartItemsContainer .text-muted {
-    color: rgba(var(--base-gray-rgb), 0.8) !important;
-  }
-  #cartItemsContainer h6 {
-    color: var(--text-accent) !important;
-  }
-  #cartItemsContainer .fw-bold {
-    color: var(--text-accent) !important;
-  }
-  #cartTotal {
-    color: var(--text-accent) !important; /* Total harga di keranjang */
-    font-size: 1.75rem;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(var(--base-light-blue-rgb), 0.4);
-  }
-  #cartItemsContainer .btn-outline-secondary {
-    border-color: rgba(var(--base-dark-gray-rgb), 0.5) !important;
-    color: var(--text-light) !important;
-    background-color: transparent !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  #cartItemsContainer .btn-outline-secondary:hover {
-    background-color: rgba(var(--base-light-blue-rgb), 0.1) !important;
-    color: var(--text-accent) !important;
-  }
-</style>
-
-<div class="container mt-5 py-4">
-  <h2 class="text-center mb-4 fw-bold text-light">Our Featured Products</h2>
-
-  <div class="row mb-4 justify-content-center">
-    <div class="col-md-6">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          id="productSearchInput"
-          placeholder="Cari produk..."
-        />
-        <button class="btn btn-primary" type="button" id="searchButton">
-          Cari
-        </button>
-      </div>
-    </div>
-  </div>
-  <div class="row justify-content-center g-4" id="productCardsContainer">
-    {# Card 1 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name=""
-      data-category="Footwear"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Modern Footwear Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-primary mb-2">Modern Footwear</h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Discover comfort and style with our latest collection of modern
-            footwear, perfect for any occasion.
-          </p>
-          <button
-            type="button"
-            class="btn btn-primary mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Modern Footwear"
-            data-stock="50"
-            data-category="Footwear"
-            data-description="Sepatu kasual modern dengan desain ergonomis dan bahan breathable, cocok untuk aktivitas sehari-hari."
-            data-price="450000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 2 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Elegant Accessories"
-      data-category="Jewelry"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Elegant Accessories Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-info mb-2">Elegant Accessories</h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Complement your look with our curated range of elegant accessories,
-            designed to add a touch of sophistication.
-          </p>
-          <button
-            type="button"
-            class="btn btn-info mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Elegant Necklace"
-            data-stock="30"
-            data-category="Jewelry"
-            data-description="Kalung berlian imitasi yang berkilau, menambah sentuhan kemewahan pada setiap penampilan."
-            data-price="280000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 3 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Premium Apparel"
-      data-category="Apparel"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Premium Apparel Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-success mb-2">Premium Apparel</h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Experience unparalleled quality with our selection of premium
-            apparel, crafted for ultimate comfort and style.
-          </p>
-          <button
-            type="button"
-            class="btn btn-success mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Linen Shirt"
-            data-stock="75"
-            data-category="Apparel"
-            data-description="Kemeja linen berkualitas tinggi, ringan dan nyaman, ideal untuk iklim tropis."
-            data-price="350000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 4 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Sportswear Collection"
-      data-category="Sportswear"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Sportswear Collection Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-warning mb-2">
-            Sportswear Collection
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Elevate your performance with our durable and stylish sportswear,
-            designed for active lifestyles.
-          </p>
-          <button
-            type="button"
-            class="btn btn-warning mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Running Shoes"
-            data-stock="60"
-            data-category="Sportswear"
-            data-description="Sepatu lari ultralight dengan bantalan responsif, memberikan kenyamanan maksimal saat berlari."
-            data-price="700000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 5 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Bags & Wallets"
-      data-category="Bags"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Bags & Wallets Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-danger mb-2">Bags & Wallets</h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Carry your essentials in style with our collection of practical and
-            chic bags and wallets.
-          </p>
-          <button
-            type="button"
-            class="btn btn-danger mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Leather Tote Bag"
-            data-stock="25"
-            data-category="Bags"
-            data-description="Tas jinjing kulit asli dengan kompartemen luas, ideal untuk penggunaan sehari-hari atau perjalanan."
-            data-price="950000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 6 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Beauty & Personal Care"
-      data-category="Beauty"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Beauty & Personal Care Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-dark mb-2">
-            Beauty & Personal Care
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Indulge in our range of beauty and personal care products for a
-            radiant and refreshed you.
-          </p>
-          <button
-            type="button"
-            class="btn btn-dark mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Organic Facial Serum"
-            data-stock="40"
-            data-category="Beauty"
-            data-description="Serum wajah organik yang kaya antioksidan, membantu mencerahkan dan meremajakan kulit."
-            data-price="180000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 7 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Home & Living Decor"
-      data-category="Home Decor"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Home & Living Decor Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-secondary mb-2">
-            Home & Living Decor
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Transform your space with our exquisite home and living decor items,
-            blending style and comfort.
-          </p>
-          <button
-            type="button"
-            class="btn btn-secondary mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Ceramic Vase"
-            data-stock="15"
-            data-category="Home Decor"
-            data-description="Vas keramik artisanal dengan sentuhan modern, ideal untuk mempercantik sudut ruangan Anda."
-            data-price="120000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 8 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Electronics & Gadgets"
-      data-category="Electronics"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Electronics & Gadgets Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-primary mb-2">
-            Electronics & Gadgets
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Stay connected and entertained with our cutting-edge electronics and
-            smart gadgets.
-          </p>
-          <button
-            type="button"
-            class="btn btn-primary mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Smartwatch Pro"
-            data-stock="20"
-            data-category="Electronics"
-            data-description="Smartwatch multifungsi dengan fitur pelacak kesehatan dan notifikasi pintar, sempurna untuk gaya hidup modern."
-            data-price="1200000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 9 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Kids & Toys Collection"
-      data-category="Toys"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Kids & Toys Collection Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-info mb-2">
-            Kids & Toys Collection
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Bring joy to your little ones with our fun and educational
-            collection of kids' toys and apparel.
-          </p>
-          <button
-            type="button"
-            class="btn btn-info mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Educational Robot Kit"
-            data-stock="35"
-            data-category="Toys"
-            data-description="Kit robot edukasi yang merangsang kreativitas dan pemikiran logis anak-anak, ideal untuk belajar sambil bermain."
-            data-price="300000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 10 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Outdoor & Camping Gear"
-      data-category="Outdoor"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Outdoor & Camping Gear Product Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-success mb-2">
-            Outdoor & Camping Gear
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Equip yourself for adventure with our premium outdoor and camping
-            gear, built for durability.
-          </p>
-          <button
-            type="button"
-            class="btn btn-success mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Lightweight Tent"
-            data-stock="10"
-            data-category="Outdoor"
-            data-description="Tenda ultralight untuk 2 orang, mudah dipasang dan ideal untuk petualangan hiking dan camping."
-            data-price="850000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 11 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Health & Wellness"
-      data-category="Wellness"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Health & Wellness Products Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-warning mb-2">
-            Health & Wellness
-          </h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Nourish your body and mind with our selection of health and wellness
-            products for a balanced lifestyle.
-          </p>
-          <button
-            type="button"
-            class="btn btn-warning mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="Yoga Mat Pro"
-            data-stock="45"
-            data-category="Wellness"
-            data-description="Matras yoga anti-slip premium dengan ketebalan optimal untuk kenyamanan dan stabilitas saat berlatih."
-            data-price="220000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-    {# Card 12 #}
-    <div
-      class="col-md-4 col-lg-3 product-card"
-      data-name="Books & Media"
-      data-category="Books"
-    >
-      <div
-        class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-white"
-      >
-        <img
-          src="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          class="card-img-top img-fluid"
-          alt="Books & Media Collection Image"
-        />
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold text-danger mb-2">Books & Media</h5>
-          <p class="card-text text-secondary flex-grow-1">
-            Expand your knowledge and entertainment with our diverse collection
-            of books and media.
-          </p>
-          <button
-            type="button"
-            class="btn btn-danger mt-3 view-details-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#productDetailModal"
-            data-name="The Great Novel"
-            data-stock="90"
-            data-category="Books"
-            data-description="Novel fiksi ilmiah yang mendebarkan, membawa Anda ke dunia imajinasi tanpa batas."
-            data-price="150000"
-            data-img="https://dynamic.zacdn.com/VBOhGE8BRvUaA4uu4zhOx_AB2yw=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/atva-2153-0396233-1.jpg"
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="cart-icon-container">
-  <a
-    href="#"
-    class="cart-icon"
-    data-bs-toggle="modal"
-    data-bs-target="#cartModal"
-  >
-    <i class="fas fa-shopping-cart"></i>
-    <span class="cart-badge" id="cartItemCount">0</span>
-  </a>
-</div>
-
-<div
-  class="modal fade"
-  id="productDetailModal"
-  tabindex="-1"
-  aria-labelledby="productDetailModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="productDetailModalLabel">
-          Product Details
-        </h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-5">
-            <img
-              id="modalProductImg"
-              src=""
-              class="img-fluid rounded mb-3"
-              alt="Product Image"
+      <div class="row mb-4 justify-content-center">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              id="productSearchInput"
+              placeholder="Cari produk..."
+              aria-label="Search products"
             />
+            <button
+              class="btn"
+              type="button"
+              id="searchButton"
+              aria-label="Search"
+            >
+              Cari
+            </button>
           </div>
-          <div class="col-md-7">
-            <h4 class="mb-3" id="modalProductName"></h4>
-            <p><strong>Stok:</strong> <span id="modalProductStock"></span></p>
-            <p>
-              <strong>Kategori:</strong> <span id="modalProductCategory"></span>
-            </p>
-            <p>
-              <strong>Deskripsi:</strong>
-              <span id="modalProductDescription"></span>
-            </p>
-            <h5 class="mt-4">
-              <strong>Harga:</strong>
-              <span id="modalProductPrice" class="text-success fw-bold"></span>
-            </h5>
-            <div class="d-flex align-items-center mt-3">
-              <label for="productQuantity" class="form-label me-2"
-                >Jumlah:</label
+        </div>
+      </div>
+      <div class="row justify-content-center g-4" id="productCardsContainer">
+        {% for product in products %}
+        <div
+          class="col-md-4 col-lg-3 product-card"
+          data-name="{{ product.nama }}"
+          data-category="{{ product.kategori }}"
+          data-id="{{ product.id }}"
+          data-stock="{{ product.stok }}"
+          {#
+          Ini
+          adalah
+          stok
+          awal
+          dari
+          database
+          #}
+          data-img="{{ product.gambar_url }}"
+        >
+          <div
+            class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden bg-light-subtle"
+          >
+            <img
+              src="{{ product.gambar_url }}"
+              class="card-img-top img-fluid"
+              alt="{{ product.nama }} Image"
+            />
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold text-primary mb-2">
+                {{ product.nama }}
+              </h5>
+              <p class="card-text text-secondary flex-grow-1">
+                {{ product.deskripsi | truncate(100) }}
+              </p>
+              <p class="card-text price">
+                <strong>Harga: {{ product.harga_formatted }}</strong>
+              </p>
+              <p class="stock-text text-light">
+                <strong>Stok: </strong
+                ><span class="stock-value">{{ product.stok }}</span>
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary mt-3 view-details-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#productDetailModal"
+                data-id="{{ product.id }}"
+                data-name="{{ product.nama }}"
+                data-stock="{{ product.stok }}"
+                {#
+                Ini
+                adalah
+                stok
+                awal
+                dari
+                database
+                #}
+                data-category="{{ product.kategori }}"
+                data-description="{{ product.deskripsi }}"
+                data-price="{{ product.harga }}"
+                data-img="{{ product.gambar_url }}"
               >
-              <input
-                type="number"
-                id="productQuantity"
-                class="form-control w-25"
-                value="1"
-                min="1"
-              />
+                View Details
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn btn-primary" id="addToCartBtn">
-          Add to Cart
-        </button>
+        {% else %}
+        <div class="col-12">
+          <p class="text-center text-muted">Tidak ada produk yang tersedia.</p>
+        </div>
+        {% endfor %}
       </div>
     </div>
-  </div>
-</div>
 
-<div
-  class="modal fade"
-  id="cartModal"
-  tabindex="-1"
-  aria-labelledby="cartModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="cartModalLabel">Your Shopping Cart</h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <div id="cartItemsContainer">
-          <p class="text-center text-muted" id="emptyCartMessage">
-            Your cart is empty.
-          </p>
-        </div>
-        <div
-          class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top"
+    <div class="cart-icon-container">
+      <a
+        href="#"
+        class="cart-icon"
+        data-bs-toggle="modal"
+        data-bs-target="#cartModal"
+        aria-label="Shopping cart"
+      >
+        <i class="fas fa-shopping-cart"></i>
+        <span
+          class="cart-badge"
+          id="cartItemCount"
+          aria-live="polite"
+          aria-atomic="true"
+          >0</span
         >
-          <h5 class="mb-0">Total:</h5>
-          <h5 class="mb-0 text-success fw-bold" id="cartTotal">Rp 0</h5>
+      </a>
+    </div>
+
+    <div
+      class="modal fade"
+      id="productDetailModal"
+      tabindex="-1"
+      aria-labelledby="productDetailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title" id="productDetailModalLabel">
+              Product Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-5">
+                <img
+                  id="modalProductImg"
+                  src=""
+                  class="img-fluid rounded mb-3"
+                  alt="Product Image"
+                />
+              </div>
+              <div class="col-md-7">
+                <h4 class="mb-3" id="modalProductName"></h4>
+                <p>
+                  <strong>Stok:</strong> <span id="modalProductStock"></span>
+                </p>
+                <p>
+                  <strong>Kategori:</strong>
+                  <span id="modalProductCategory"></span>
+                </p>
+                <p>
+                  <strong>Deskripsi:</strong>
+                  <span id="modalProductDescription"></span>
+                </p>
+                <h5 class="mt-4">
+                  <strong>Harga:</strong>
+                  <span
+                    id="modalProductPrice"
+                    class="text-accent fw-bold"
+                  ></span>
+                </h5>
+                <div class="d-flex align-items-center mt-3">
+                  <label for="productQuantity" class="form-label me-2"
+                    >Jumlah:</label
+                  >
+                  <input
+                    type="number"
+                    id="productQuantity"
+                    class="form-control w-25"
+                    value="1"
+                    min="1"
+                    aria-live="polite"
+                    aria-label="Product quantity"
+                  />
+                </div>
+                <p
+                  id="stockWarning"
+                  style="
+                    color: #dc3545;
+                    font-weight: 600;
+                    margin-top: 0.5rem;
+                    display: none;
+                  "
+                >
+                  Jumlah melebihi stok yang tersedia!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="addToCartBtn">
+              Add to Cart
+            </button>
+          </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn btn-success">Checkout</button>
+    </div>
+
+    <div
+      class="modal fade"
+      id="cartModal"
+      tabindex="-1"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="cartModalLabel">Your Shopping Cart</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="cartItemsContainer">
+              <p class="text-center text-muted" id="emptyCartMessage">
+                Your cart is empty.
+              </p>
+            </div>
+            <div
+              class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top"
+            >
+              <h5 class="mb-0">Total:</h5>
+              <h5 class="mb-0 text-accent fw-bold" id="cartTotal">Rp 0</h5>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-success" id="checkoutBtn">
+              Checkout
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-/>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const productDetailModal =
+          document.getElementById("productDetailModal");
+        const addToCartBtn = document.getElementById("addToCartBtn");
+        const cartModal = document.getElementById("cartModal");
+        const cartItemsContainer =
+          document.getElementById("cartItemsContainer");
+        const cartItemCountSpan = document.getElementById("cartItemCount");
+        const cartTotalSpan = document.getElementById("cartTotal");
+        const emptyCartMessage = document.getElementById("emptyCartMessage");
+        const productSearchInput =
+          document.getElementById("productSearchInput");
+        const searchButton = document.getElementById("searchButton");
+        const stockWarning = document.getElementById("stockWarning");
+        const checkoutBtn = document.getElementById("checkoutBtn");
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const productDetailModal = document.getElementById("productDetailModal");
-    const addToCartBtn = document.getElementById("addToCartBtn");
-    const cartModal = document.getElementById("cartModal");
-    const cartItemsContainer = document.getElementById("cartItemsContainer");
-    const cartItemCountSpan = document.getElementById("cartItemCount");
-    const cartTotalSpan = document.getElementById("cartTotal");
-    const emptyCartMessage = document.getElementById("emptyCartMessage");
-    const productSearchInput = document.getElementById("productSearchInput"); // New
-    const searchButton = document.getElementById("searchButton"); // New
-    const productCardsContainer = document.getElementById(
-      "productCardsContainer"
-    ); // New
+        let currentProduct = {};
 
-    let currentProduct = {}; // To store the product data from the detail modal
+        function getCart() {
+          const cart = localStorage.getItem("shoppingCart");
+          return cart ? JSON.parse(cart) : [];
+        }
 
-    // --- Fungsi Helper Keranjang ---
-    function getCart() {
-      const cart = localStorage.getItem("shoppingCart");
-      return cart ? JSON.parse(cart) : [];
-    }
+        function saveCart(cart) {
+          localStorage.setItem("shoppingCart", JSON.stringify(cart));
+          updateCartDisplay();
+        }
 
-    function saveCart(cart) {
-      localStorage.setItem("shoppingCart", JSON.stringify(cart));
-      updateCartDisplay();
-    }
+        function formatRupiah(number) {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(number);
+        }
 
-    function formatRupiah(number) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      }).format(number);
-    }
+        function updateCartDisplay() {
+          let cart = getCart();
+          cartItemsContainer.innerHTML = "";
 
-    // --- Update Tampilan Keranjang ---
-    function updateCartDisplay() {
-      let cart = getCart();
-      cartItemsContainer.innerHTML = ""; // Clear existing items
+          if (cart.length === 0) {
+            emptyCartMessage.style.display = "block";
+            checkoutBtn.disabled = true;
+          } else {
+            emptyCartMessage.style.display = "none";
+            checkoutBtn.disabled = false;
 
-      if (cart.length === 0) {
-        emptyCartMessage.style.display = "block";
-      } else {
-        emptyCartMessage.style.display = "none";
-        let total = 0;
-        cart.forEach((item, index) => {
-          const itemTotal = item.price * item.quantity;
-          total += itemTotal;
+            let total = 0;
+            cart.forEach((item, index) => {
+              const itemTotal = item.price * item.quantity;
+              total += itemTotal;
 
-          const cartItemHtml = `
-                        <div class="d-flex align-items-center mb-3 border-bottom pb-3">
-                            <img src="${
-                              item.img
-                            }" class="img-fluid rounded me-3" style="width: 80px; height: 80px; object-fit: cover;" alt="${
-            item.name
-          }">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">${item.name}</h6>
-                                <p class="mb-1 text-muted">Harga: ${formatRupiah(
-                                  item.price
-                                )}</p>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary decrease-qty-btn" data-index="${index}">-</button>
-                                    <span class="mx-2">${item.quantity}</span>
-                                    <button class="btn btn-sm btn-outline-secondary increase-qty-btn" data-index="${index}">+</button>
-                                    <span class="ms-3 fw-bold">${formatRupiah(
-                                      itemTotal
-                                    )}</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-danger btn-sm remove-item-btn" data-index="${index}"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-          cartItemsContainer.innerHTML += cartItemHtml;
+              const cartItemHtml = `
+              <div class="d-flex align-items-center mb-3 border-bottom pb-3">
+                <img src="${
+                  item.img
+                }" class="img-fluid rounded me-3" style="width: 80px; height: 80px; object-fit: cover;" alt="${
+                item.name
+              }">
+                <div class="flex-grow-1">
+                  <h6 class="mb-1">${item.name}</h6>
+                  <p class="mb-1 text-muted">Harga: ${formatRupiah(
+                    item.price
+                  )}</p>
+                  <div class="d-flex align-items-center">
+                    <span class="mx-2">${item.quantity}</span>
+                    <span class="ms-3 fw-bold">${formatRupiah(itemTotal)}</span>
+                  </div>
+                </div>
+                <button class="btn btn-danger btn-sm remove-item-btn" data-index="${index}" aria-label="Hapus barang"><i class="fas fa-trash"></i></button>
+              </div>
+              `;
+              cartItemsContainer.innerHTML += cartItemHtml;
+            });
+
+            cartItemsContainer
+              .querySelectorAll(".remove-item-btn")
+              .forEach((btn) => {
+                btn.addEventListener("click", function () {
+                  const index = parseInt(this.dataset.index);
+                  removeFromCart(index);
+                });
+              });
+
+            cartTotalSpan.textContent = formatRupiah(total);
+          }
+
+          const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          cartItemCountSpan.textContent = totalItems;
+        }
+
+        function removeFromCart(index) {
+          let cart = getCart();
+          if (cart[index]) {
+            cart.splice(index, 1);
+            saveCart(cart);
+          }
+        }
+
+        productDetailModal.addEventListener("show.bs.modal", function (event) {
+          const button = event.relatedTarget;
+          currentProduct = {
+            id: button.getAttribute("data-id"),
+            name: button.getAttribute("data-name"),
+            stock: parseInt(button.getAttribute("data-stock")),
+            category: button.getAttribute("data-category"),
+            description: button.getAttribute("data-description"),
+            price: parseFloat(button.getAttribute("data-price")),
+            img: button.getAttribute("data-img"),
+          };
+
+          document.getElementById("modalProductImg").src = currentProduct.img;
+          document.getElementById("modalProductName").textContent =
+            currentProduct.name;
+          document.getElementById("modalProductStock").textContent =
+            currentProduct.stock;
+          document.getElementById("modalProductCategory").textContent =
+            currentProduct.category;
+          document.getElementById("modalProductDescription").textContent =
+            currentProduct.description;
+          document.getElementById("modalProductPrice").textContent =
+            formatRupiah(currentProduct.price);
+          document.getElementById("productQuantity").value = 1;
+
+          stockWarning.style.display = "none";
+          addToCartBtn.disabled = false;
+          addToCartBtn.textContent = "Add to Cart";
+
+          if (currentProduct.stock <= 0) {
+            addToCartBtn.disabled = true;
+            addToCartBtn.textContent = "Stok Habis";
+            stockWarning.textContent = "Stok Habis!";
+            stockWarning.style.display = "block";
+          }
         });
 
-        // Add event listeners for quantity buttons and remove button
-        cartItemsContainer
-          .querySelectorAll(".decrease-qty-btn")
-          .forEach((btn) => {
-            btn.addEventListener("click", function () {
-              const index = parseInt(this.dataset.index);
-              updateQuantity(index, -1);
+        addToCartBtn.addEventListener("click", function () {
+          const quantity = parseInt(
+            document.getElementById("productQuantity").value
+          );
+          if (isNaN(quantity) || quantity <= 0) {
+            alert("Jumlah tidak valid!");
+            return;
+          }
+
+          if (quantity > currentProduct.stock) {
+            stockWarning.textContent = "Jumlah melebihi stok yang tersedia!";
+            stockWarning.style.display = "block";
+            return;
+          } else {
+            stockWarning.style.display = "none";
+          }
+
+          let cart = getCart();
+          const existingIndex = cart.findIndex(
+            (item) => item.id === currentProduct.id
+          );
+
+          if (existingIndex > -1) {
+            cart[existingIndex].quantity += quantity;
+          } else {
+            cart.push({
+              id: currentProduct.id,
+              name: currentProduct.name,
+              price: currentProduct.price,
+              img: currentProduct.img,
+              quantity: quantity,
             });
-          });
-        cartItemsContainer
-          .querySelectorAll(".increase-qty-btn")
-          .forEach((btn) => {
-            btn.addEventListener("click", function () {
-              const index = parseInt(this.dataset.index);
-              updateQuantity(index, 1);
-            });
-          });
-        cartItemsContainer
-          .querySelectorAll(".remove-item-btn")
-          .forEach((btn) => {
-            btn.addEventListener("click", function () {
-              const index = parseInt(this.dataset.index);
-              removeFromCart(index);
-            });
-          });
+          }
 
-        cartTotalSpan.textContent = formatRupiah(total);
-      }
+          saveCart(cart);
+          alert(
+            `${quantity} ${currentProduct.name} telah ditambahkan ke keranjang.`
+          );
 
-      // Update cart item count badge
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      cartItemCountSpan.textContent = totalItems;
-    }
-
-    // --- Fungsi Update Kuantitas Item di Keranjang ---
-    function updateQuantity(index, change) {
-      let cart = getCart();
-      if (cart[index]) {
-        cart[index].quantity += change;
-        if (cart[index].quantity <= 0) {
-          cart.splice(index, 1); // Remove item if quantity is 0 or less
-        }
-        saveCart(cart);
-      }
-    }
-
-    // --- Fungsi Hapus Item dari Keranjang ---
-    function removeFromCart(index) {
-      let cart = getCart();
-      if (cart[index]) {
-        cart.splice(index, 1);
-        saveCart(cart);
-      }
-    }
-
-    // --- Event Listener untuk Modal Detail Produk ---
-    productDetailModal.addEventListener("show.bs.modal", function (event) {
-      const button = event.relatedTarget; // Button that triggered the modal
-
-      // Extract info and store in currentProduct object
-      currentProduct = {
-        name: button.getAttribute("data-name"),
-        stock: parseInt(button.getAttribute("data-stock")),
-        category: button.getAttribute("data-category"),
-        description: button.getAttribute("data-description"),
-        price: parseInt(button.getAttribute("data-price")), // Ensure price is a number
-        img: button.getAttribute("data-img"), // Get image URL
-      };
-
-      // Update the modal's content
-      document.getElementById("modalProductImg").src = currentProduct.img;
-      document.getElementById("modalProductName").textContent =
-        currentProduct.name;
-      document.getElementById("modalProductStock").textContent =
-        currentProduct.stock;
-      document.getElementById("modalProductCategory").textContent =
-        currentProduct.category;
-      document.getElementById("modalProductDescription").textContent =
-        currentProduct.description;
-      document.getElementById("modalProductPrice").textContent = formatRupiah(
-        currentProduct.price
-      );
-      document.getElementById("productQuantity").value = 1; // Reset quantity to 1
-
-      // Disable "Add to Cart" if stock is 0
-      if (currentProduct.stock === 0) {
-        addToCartBtn.disabled = true;
-        addToCartBtn.textContent = "Stok Habis";
-      } else {
-        addToCartBtn.disabled = false;
-        addToCartBtn.textContent = "Add to Cart";
-      }
-    });
-
-    // --- Event Listener untuk Tombol "Add to Cart" di Modal Detail Produk ---
-    addToCartBtn.addEventListener("click", function () {
-      const quantity = parseInt(
-        document.getElementById("productQuantity").value
-      );
-
-      if (quantity <= 0 || quantity > currentProduct.stock) {
-        alert("Jumlah tidak valid atau melebihi stok yang tersedia!");
-        return;
-      }
-
-      let cart = getCart();
-      const existingItemIndex = cart.findIndex(
-        (item) => item.name === currentProduct.name
-      );
-
-      if (existingItemIndex > -1) {
-        // Item already in cart, update quantity
-        const newQuantity = cart[existingItemIndex].quantity + quantity;
-        if (newQuantity > currentProduct.stock) {
-          alert("Tidak bisa menambah lebih dari stok yang tersedia!");
-          return;
-        }
-        cart[existingItemIndex].quantity = newQuantity;
-      } else {
-        // Add new item to cart
-        cart.push({
-          name: currentProduct.name,
-          price: currentProduct.price,
-          img: currentProduct.img,
-          quantity: quantity,
+          const modalInstance = bootstrap.Modal.getInstance(productDetailModal);
+          modalInstance.hide();
         });
-      }
 
-      saveCart(cart);
-      alert(
-        `${quantity} ${currentProduct.name} telah ditambahkan ke keranjang.`
-      );
-      const productDetailModalInstance =
-        bootstrap.Modal.getInstance(productDetailModal);
-      productDetailModalInstance.hide();
-    });
+        checkoutBtn.addEventListener("click", async function () {
+          const cart = getCart();
+          if (cart.length === 0) {
+            alert("Keranjang Anda kosong!");
+            return;
+          }
 
-    // --- Fungsi Pencarian Produk ---
-    function searchProducts() {
-      const searchTerm = productSearchInput.value.toLowerCase();
-      const productCards = document.querySelectorAll(".product-card");
+          try {
+            const response = await fetch("/checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cart: cart }),
+            });
 
-      productCards.forEach((card) => {
-        const productName = card.getAttribute("data-name").toLowerCase();
-        const productCategory = card
-          .getAttribute("data-category")
-          .toLowerCase();
+            if (response.ok) {
+              const result = await response.json();
+              alert(result.message);
+              localStorage.removeItem("shoppingCart");
+              updateCartDisplay();
+              const modalInstance = bootstrap.Modal.getInstance(cartModal);
+              modalInstance.hide();
+              window.location.href = "/transaction_success";
+            } else {
+              const errorData = await response.json();
+              alert(`Checkout failed: ${errorData.message}`);
+            }
+          } catch (error) {
+            console.error("Error during checkout:", error);
+            alert("Terjadi kesalahan saat checkout. Silakan coba lagi.");
+          }
+        });
 
-        if (
-          productName.includes(searchTerm) ||
-          productCategory.includes(searchTerm)
-        ) {
-          card.style.display = "block"; // Show the card
-        } else {
-          card.style.display = "none"; // Hide the card
+        function searchProducts() {
+          const searchTerm = productSearchInput.value.toLowerCase();
+          const productCards = document.querySelectorAll(".product-card");
+          productCards.forEach((card) => {
+            const productName = card.getAttribute("data-name").toLowerCase();
+            const productCategory = card
+              .getAttribute("data-category")
+              .toLowerCase();
+            if (
+              productName.includes(searchTerm) ||
+              productCategory.includes(searchTerm)
+            ) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
         }
+
+        searchButton.addEventListener("click", searchProducts);
+        productSearchInput.addEventListener("keyup", (event) => {
+          if (event.key === "Enter") {
+            searchProducts();
+          }
+        });
+
+        updateCartDisplay();
       });
-    }
-
-    // --- Event Listeners untuk Pencarian ---
-    searchButton.addEventListener("click", searchProducts);
-    productSearchInput.addEventListener("keyup", function (event) {
-      if (event.key === "Enter") {
-        searchProducts();
-      }
-    });
-
-    // Initial cart display update on page load
-    updateCartDisplay();
-  });
-</script>
-{% endblock %}
+    </script>
+    {% endblock %}
+  </body>
+</html>
